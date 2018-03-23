@@ -17,3 +17,9 @@ class Membership(models.Model):
     dev_group = models.ForeignKey(DevGroup, on_delete=models.CASCADE)
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
+
+    def delete(self, *args, **kwargs):
+        # TODO auditlog
+        self.is_active = False
+        self.save()
+

@@ -13,7 +13,7 @@ class EmailUserAdmin(UserAdmin):
 					'fields': ('email', 'first_name', 'last_name', 'password')
 				}),
 				(_('Permissions'), {
-					'fields': ('is_active', 'is_staff', 'is_superuser', 'groups')
+					'fields': ('is_active', 'is_staff', 'is_superuser', 'allowed_roles')
 				}),
 				(_('Important dates'), {
 					'fields': ('last_login', 'date_joined')
@@ -22,7 +22,7 @@ class EmailUserAdmin(UserAdmin):
 	add_fieldsets = ((
 		None, {
 			'classes': ('wide',),
-			'fields': ('email', 'password1', 'password2', 'first_name', 'last_name', 'groups')
+			'fields': ('email', 'password1', 'password2', 'first_name', 'last_name', 'allowed_roles')
 		}
 	),
 	)
@@ -34,7 +34,7 @@ class EmailUserAdmin(UserAdmin):
 	# that reference specific fields on auth.User.
 	readonly_fields = ('date_joined', )
 	list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active')
-	list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
+	list_filter = ('is_staff', 'is_superuser', 'is_active', 'allowed_roles')
 	search_fields = ('email', 'last_name', 'first_name')
 	ordering = ('email', )
 	filter_horizontal = ('groups', 'user_permissions')

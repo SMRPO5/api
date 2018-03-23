@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.query import QuerySet
+from dev_groups.models import Group
 import logging
 
 logger = logging.getLogger(__name__)
@@ -76,6 +77,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 		),
 	)
 	date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
+	allowed_roles = models.ManyToManyField(Group, related_name='allowed_users')
+
 	USERNAME_FIELD = 'email'
 	objects = EmailUserManager()
 
