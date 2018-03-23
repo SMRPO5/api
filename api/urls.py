@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^api-token-refresh/', refresh_jwt_token),
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^users/', include('users.urls')),
+    url(r'^dev_groups/', include('dev_groups.urls')),
 ]

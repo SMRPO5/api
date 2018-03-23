@@ -16,3 +16,4 @@ class UserViewSet(UpdateModelMixin, RetrieveModelMixin, ListModelMixin, DestroyM
 
 	def get_queryset(self):
 		return get_user_model().objects.filter(id=self.request.user.id)
+
