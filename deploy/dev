@@ -1,0 +1,3 @@
+DJANGO_SETTINGS_MODULE=api.production_settings
+POSTGRES_PASSWORD=smrpo
+DB_HOST=db

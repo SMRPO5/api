@@ -1,0 +1,43 @@
+version: '2'
+
+volumes:
+  static-files: {}
+  media-files: {}
+  pgdata: {}
+
+services:
+  db:
+    restart: always
+    image: postgres:10.3
+    expose:
+      - "5432"
+    environment:
+      - POSTGRES_USER=smrpo
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB=smrpo
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  nginx:
+    restart: always
+    image: ak2748/nginx:latest
+    volumes:
+     - static-files:/app/static
+     - media-files:/app/media
+    command: ["./wait-for-it.sh", "-t", "0",  "django:8001", "--", "./nginx-entrypoint.sh"]
+    links:
+      - django
+
+  django:
+    restart: always
+    image: ak2748/smrpo-django:latest
+    command: ["../../../wait-for-it.sh", "-t", "0",  "${DB_HOST}:5432", "--" ,"../../../gunicorn.sh"]
+    volumes:
+      - static-files:/app/static
+      - media-files:/app/media
+    environment:
+      - DJANGO_SETTINGS_MODULE
+      - POSTGRES_PASSWORD
+      - DB_HOST
+    links:
+      - db

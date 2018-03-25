@@ -6,3 +6,5 @@ Markdown==2.6.11
 PyJWT==1.6.1
 pytz==2018.3
 drf-yasg
+psycopg2
+django-fixture-magic
