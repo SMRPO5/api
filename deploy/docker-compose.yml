@@ -28,10 +28,25 @@ services:
     links:
       - django
 
+  django-migrations:
+    image: ak2748/smrpo-django:latest
+    environment:
+      - DJANGO_SETTINGS_MODULE
+      - POSTGRES_PASSWORD
+      - DB_HOST
+    volumes:
+     - static-files:/app/static
+     - media-files:/app/media
+    labels:
+      - io.rancher.container.start_once=true
+    command: ["/wait-for-it.sh", "-t", "0",  "${DB_HOST}:5432", "--" ,"/django-code-entrypoint.sh"]
+    links:
+      - db
+
   django:
     restart: always
     image: ak2748/smrpo-django:latest
-    command: ["../../../wait-for-it.sh", "-t", "0",  "${DB_HOST}:5432", "--" ,"../../../gunicorn.sh"]
+    command: ["/wait-for-it.sh", "-t", "0",  "${DB_HOST}:5432", "--" ,"/gunicorn.sh"]
     volumes:
       - static-files:/app/static
       - media-files:/app/media

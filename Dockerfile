@@ -27,10 +27,10 @@ WORKDIR /app/code
 
 ADD deploy/gunicorn.conf /gunicorn.conf
 ADD deploy/gunicorn.sh /gunicorn.sh
-RUN chmod 0644 /gunicorn.sh
+RUN chmod +x /gunicorn.sh
 ADD deploy/wait-for-db.sh /wait-for-db.sh
-RUN chmod 0644 /wait-for-db.sh
+RUN chmod +x /wait-for-db.sh
 ADD deploy/wait-for-it.sh /wait-for-it.sh
-RUN chmod 0644 /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
 ADD deploy/django-code-entrypoint.sh /django-code-entrypoint.sh
-RUN chmod 0644 /django-code-entrypoint.sh
+RUN chmod +x /django-code-entrypoint.sh
