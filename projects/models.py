@@ -3,10 +3,17 @@ from dev_groups.models import DevGroup
 from django.conf import settings
 
 
-class Project(models.Model):
+class BaseModel(models.Model):
+	created_at = models.DateTimeField(auto_now_add=True)
+	modified_at = models.DateTimeField(auto_now=True)
+
+	class Meta:
+		abstract = True
+
+
+class Project(BaseModel):
 	name = models.CharField(max_length=256)
 	buyer_name = models.CharField(max_length=512)
-	project_created_at = models.DateTimeField(auto_now_add=True)
 	start_date = models.DateTimeField()
 	end_date = models.DateTimeField()
 	estimated_end_date = models.DateTimeField()
@@ -14,42 +21,40 @@ class Project(models.Model):
 	is_active = models.BooleanField()
 
 
-class Comment(models.Model):
+class Comment(BaseModel):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-	date_created = models.DateTimeField(auto_now_add=True)
-	date_changed = models.DateTimeField(auto_now=True)
 	message = models.TextField()
 
 
-class CardType(models.Model):
+class CardType(BaseModel):
 	name = models.CharField(max_length=256)
-	is_active = models.BooleanField()
+	is_active = models.BooleanField(default=True)
 	color = models.CharField(max_length=128)
 
 
-class Lane(models.Model):
+class Lane(BaseModel):
 	name = models.CharField(max_length=256)
 	order = models.CharField(max_length=512)
-	is_active = models.BooleanField()
+	is_active = models.BooleanField(default=True)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='lanes')
 
 
-class LoggedTime(models.Model):
+class LoggedTime(BaseModel):
 	task = models.ForeignKey('Task', on_delete=models.CASCADE)
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	time = models.PositiveIntegerField()
 
 
-class Task(models.Model):
+class Task(BaseModel):
 	name = models.CharField(max_length=256)
 	card = models.ForeignKey('Card', on_delete=models.CASCADE)
 	description = models.TextField()
 	assignee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-	is_active = models.BooleanField()
-	comments = models.ManyToManyField(Comment)
+	is_active = models.BooleanField(default=True)
+	comments = models.ManyToManyField(Comment, blank=True)
 
 
-class Card(models.Model):
+class Card(BaseModel):
 	# BACKLOG = 'backlog'
 	# PRODUCT_BACKLOG = 'product_backlog'
 	# NEXT = 'next'
@@ -92,7 +97,7 @@ class Card(models.Model):
 	size = models.PositiveIntegerField()
 	deadline = models.DateTimeField()
 	lane = models.ForeignKey(Lane, on_delete=models.CASCADE, related_name='cards')
-	comments = models.ManyToManyField(Comment, related_name='cards')
+	comments = models.ManyToManyField(Comment, related_name='cards', blank=True)
 
 
 

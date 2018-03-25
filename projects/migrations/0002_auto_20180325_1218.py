@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='lane',
             name='is_active',
-            field=models.BooleanField(default=1),
+            field=models.BooleanField(default=True),
             preserve_default=False,
         ),
         migrations.AddField(
