@@ -30,7 +30,8 @@ class CardType(models.Model):
 class Lane(models.Model):
 	name = models.CharField(max_length=256)
 	order = models.CharField(max_length=512)
-	is_active = models.BooleanField
+	is_active = models.BooleanField()
+	project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='lanes')
 
 
 class LoggedTime(models.Model):
@@ -90,8 +91,8 @@ class Card(models.Model):
 	priority = models.PositiveIntegerField(choices=priority_choices)
 	size = models.PositiveIntegerField()
 	deadline = models.DateTimeField()
-	lane = models.ForeignKey(Lane, on_delete=models.CASCADE)
-	comments = models.ManyToManyField(Comment)
+	lane = models.ForeignKey(Lane, on_delete=models.CASCADE, related_name='cards')
+	comments = models.ManyToManyField(Comment, related_name='cards')
 
 
 

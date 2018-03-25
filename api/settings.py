@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'dev_groups',
+    'projects',
     'drf_yasg'
 ]
 
