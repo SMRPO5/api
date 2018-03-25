@@ -1,0 +1,559 @@
+{
+	"info": {
+		"name": "SMRPO5",
+		"_postman_id": "fd1b7591-9814-70e9-8c10-e99eaf47e134",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"description": "",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@admin.si\",\n    \"password\": \"admin123!\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/api-token-auth/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api-token-auth",
+								""
+							]
+						},
+						"description": "How to get JWT api token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DevGroups",
+			"description": "",
+			"item": [
+				{
+					"name": "Create DevGroup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluQGFkbWluLnNpIiwiZXhwIjoxNTIxOTg0NjIyLCJlbWFpbCI6ImFkbWluQGFkbWluLnNpIn0.W-b4C0IG75h9h_TE469m2a5LGR0SHzt-Ojj8T2V1OP4"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test Group\",\n  \"members\": [{\n    \"user\": \"admin@admin.si\",\n    \"role\": [\n      1\n    ]\n  }]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/dev_groups/dev_groups/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"dev_groups",
+								"dev_groups",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get DevGroups",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6ImFkbWluQGFkbWluLnNpIiwiZXhwIjoxNTIxOTk1NDU3LCJlbWFpbCI6ImFkbWluQGFkbWluLnNpIn0.6V2s2CzhEd6FN-mnga0e6avFBWXVMr7FgcEVwqlrQUU"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8000/dev_groups/dev_groups/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"dev_groups",
+								"dev_groups",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"description": "",
+			"item": [
+				{
+					"name": "GET Projects",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluQGFkbWluLnNpIiwiZXhwIjoxNTIxOTg0OTY5LCJlbWFpbCI6ImFkbWluQGFkbWluLnNpIn0.2nE97fViSJUPnz5-ln3GngvCSFhrYL4ZcFkBH87GfpY"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8000/projects/projects/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"projects",
+								""
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create Project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluQGFkbWluLnNpIiwiZXhwIjoxNTIxOTg0OTY5LCJlbWFpbCI6ImFkbWluQGFkbWluLnNpIn0.2nE97fViSJUPnz5-ln3GngvCSFhrYL4ZcFkBH87GfpY",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Test",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "buyer_name",
+									"value": "FRI",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "start_date",
+									"value": "2018-03-26 10:12:36",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "end_date",
+									"value": "2018-05-26 10:12:36",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "estimated_end_date",
+									"value": "2018-04-26 10:12:36",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "dev_group",
+									"value": "1",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/projects/projects/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"projects",
+								""
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Lanes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8000/projects/lanes/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"lanes",
+								""
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create Lanes",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Default lane",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "order",
+									"value": "abcdefghijkl",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "project",
+									"value": "1",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/projects/lanes/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"lanes",
+								""
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Card types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8000/projects/card_types/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"card_types",
+								""
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create Card types",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Product Backlog",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "color",
+									"value": "#fefefe",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/projects/card_types/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"card_types",
+								""
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cards",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8000/projects/cards/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"cards",
+								""
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create Cards",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Do something",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Do this, do that, and also the other thing",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "priority",
+									"value": "1",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "size",
+									"value": "10",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "deadline",
+									"value": "2018-12-12 12:12:12",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "3",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "assignee",
+									"value": "1",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "lane",
+									"value": "1",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/projects/cards/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"cards",
+								""
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8000/projects/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"tasks",
+								""
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create Tasks",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Do that",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Do that implementation description",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "card",
+									"value": "1",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "assignee",
+									"value": "1",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/projects/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"tasks",
+								""
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "admin@admin.si",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "admin123!",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "988d4929-4655-4fcd-9adb-62f475f08adf",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "744e24cf-f503-4671-ae2b-214207d1a897",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
