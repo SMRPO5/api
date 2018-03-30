@@ -60,3 +60,9 @@ services:
       - DB_HOST
     links:
       - db
+      
+  angularjs:
+    restart: always
+    image: ak2748/smrpo-angularjs
+
+    
