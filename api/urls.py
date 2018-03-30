@@ -35,6 +35,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^admin/defender/', include('defender.urls')), # defender admin
     url(r'^api-token-auth/', obtain_jwt_token),
     url(r'^api-token-refresh/', refresh_jwt_token),
     url(r'^api-auth/', include('rest_framework.urls')),
