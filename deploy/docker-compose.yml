@@ -43,6 +43,10 @@ services:
     links:
       - db
 
+  redis:
+    restart: always
+    image: redis:latest
+
   django:
     restart: always
     image: ak2748/smrpo-django:latest

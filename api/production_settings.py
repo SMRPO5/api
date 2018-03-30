@@ -17,5 +17,7 @@ DATABASES = {
 MEDIA_ROOT = '/app/media'
 STATIC_ROOT = '/app/static'
 
+DEFENDER_REDIS_URL = os.environ.get('REDIS_HOST', 'redis://redis:6379/0')
+
 STATIC_URL = '/api/static/'
 MEDIA_URL = '/api/media/'
