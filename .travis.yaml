@@ -1,0 +1,11 @@
+sudo: required
+
+language: python
+
+services:
+  - docker
+
+after_success:
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  - docker build -t ak2748/smrpo-django:latest .
+  - docker push ak2748/smrpo-django:latest
