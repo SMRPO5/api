@@ -1,7 +1,7 @@
 Django==2.0.3
 django-filter==1.1.0
 djangorestframework==3.7.7
-djangorestframework-jwt==1.11.0
+git+https://github.com/SMRPO5/django-rest-framework-jwt.git#egg=djangorestframework-jwt
 Markdown==2.6.11
 PyJWT==1.6.1
 pytz==2018.3
@@ -11,4 +11,5 @@ django-fixture-magic
 gunicorn
 gevent
 django-defender
+django-extensions
 django-cors-headers

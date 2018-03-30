@@ -73,9 +73,9 @@ REST_FRAMEWORK = {
 	),
 }
 
-# AUTHENTICATION_BACKENDS = (
-# 	'api.auth_backends.DefendedModelBackend',
-# )
+AUTHENTICATION_BACKENDS = (
+	'api.auth_backends.DefendedModelBackend',
+)
 
 ROOT_URLCONF = 'api.urls'
 

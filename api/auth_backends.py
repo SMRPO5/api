@@ -21,7 +21,7 @@ class DefendedModelBackend(ModelBackend):
 					cooloff_time_seconds=config.COOLOFF_TIME
 				)
 				raise exceptions.AuthenticationFailed(_(detail))
-		login_unsuccessful = False
+		login_unsuccessful = True
 		login_exception = None
 		user = None
 		try:
@@ -32,6 +32,8 @@ class DefendedModelBackend(ModelBackend):
 			# Run the default password hasher once to reduce the timing
 			# difference between an existing and a nonexistent user (#20760).
 			UserModel().set_password(password)
+		if user and user.check_password(password) and self.user_can_authenticate(user):
+			login_unsuccessful = False
 
 		utils.add_login_attempt_to_db(request,
 		                              login_valid=not login_unsuccessful,
@@ -40,6 +42,5 @@ class DefendedModelBackend(ModelBackend):
 		user_not_blocked = utils.check_request(request,
 		                                       login_unsuccessful=login_unsuccessful,
 		                                       username=username)
-		if user and user.check_password(password) and self.user_can_authenticate(user) and user_not_blocked and not login_unsuccessful:
+		if user_not_blocked and not login_unsuccessful:
 			return user
-		raise login_exception
