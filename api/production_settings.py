@@ -9,7 +9,7 @@ DATABASES = {
         'NAME': 'smrpo',
         'USER': 'smrpo',
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
+        'HOST': os.environ.get('DB_HOST', 'db'),
         'PORT': '5432',
     }
 }

@@ -145,6 +145,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 DEFENDER_LOGIN_FAILURE_LIMIT = 2
+DEFENDER_COOLOFF_TIME = 60
 
 JWT_AUTH = {
 	'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
