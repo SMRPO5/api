@@ -8,3 +8,7 @@ pytz==2018.3
 drf-yasg
 psycopg2
 django-fixture-magic
+gunicorn
+gevent
+django-defender
+django-cors-headers
