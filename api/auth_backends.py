@@ -14,11 +14,9 @@ class DefendedModelBackend(ModelBackend):
 		if username is None:
 			username = kwargs.get(UserModel.USERNAME_FIELD)
 			if utils.is_already_locked(request, username=username):
-				detail = "You have attempted to login {failure_limit} times, with no success. " \
-						 "Your account is locked for {cooloff_time_seconds} seconds" \
-						 "".format(
-					failure_limit=config.FAILURE_LIMIT + 1,
-					cooloff_time_seconds=config.COOLOFF_TIME
+				detail = "You have attempted to login {failure_limit} times, with no success. Your account is locked " \
+						 "for {cooloff_time_seconds} seconds".format(failure_limit=config.FAILURE_LIMIT + 1,
+																	 cooloff_time_seconds=config.COOLOFF_TIME
 				)
 				raise exceptions.AuthenticationFailed({'non_field_errors': [_(detail)]})
 		user = None
@@ -29,7 +27,7 @@ class DefendedModelBackend(ModelBackend):
 			# difference between an existing and a nonexistent user (#20760).
 			UserModel().set_password(password)
 
-		can_login = user and user.check_password(password) and self.user_can_authenticate(user)
+		can_login = user and user.check_password(password)
 
 		if can_login:
 			login_unsuccessful = False
