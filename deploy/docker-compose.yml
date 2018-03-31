@@ -33,7 +33,7 @@ services:
   django-migrations:
     image: ak2748/smrpo-django:latest
     labels:
-      name: django-migrations
+      name: django
     environment:
       - DJANGO_SETTINGS_MODULE
       - POSTGRES_PASSWORD
