@@ -21,6 +21,8 @@ services:
   nginx:
     restart: always
     image: ak2748/nginx:latest
+    labels:
+      name: nginx
     volumes:
      - static-files:/app/static
      - media-files:/app/media
@@ -30,6 +32,8 @@ services:
 
   django-migrations:
     image: ak2748/smrpo-django:latest
+    labels:
+      name: django
     environment:
       - DJANGO_SETTINGS_MODULE
       - POSTGRES_PASSWORD
@@ -50,6 +54,8 @@ services:
   django:
     restart: always
     image: ak2748/smrpo-django:latest
+    labels:
+      name: django
     command: ["/wait-for-it.sh", "-t", "0",  "${DB_HOST}:5432", "--" ,"/gunicorn.sh"]
     volumes:
       - static-files:/app/static
@@ -63,6 +69,8 @@ services:
       
   angularjs:
     restart: always
+    labels:
+      name: angularjs
     image: ak2748/smrpo-angularjs
 
     
