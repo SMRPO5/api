@@ -19,5 +19,5 @@ class MeViewSet(ListModelMixin, GenericViewSet):
 	serializer_class = UserSerializer
 
 	def get_queryset(self):
-		return get_user_model().objects.filter()
+		return get_user_model().objects.filter(id=self.request.user.id)
 
