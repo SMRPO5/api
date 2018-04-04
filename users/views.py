@@ -7,13 +7,17 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import DjangoModelPermissions
 
 
-class UserViewSet(UpdateModelMixin, RetrieveModelMixin, ListModelMixin, DestroyModelMixin, GenericViewSet):
-	"""
-	API endpoint that allows users to be viewed or edited.
-	"""
+class UserViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
 	serializer_class = UserSerializer
 	permission_classes = (IsAuthenticated, DjangoModelPermissions)
 
 	def get_queryset(self):
-		return get_user_model().objects.filter(id=self.request.user.id)
+		return get_user_model().objects.filter()
+
+
+class MeViewSet(ListModelMixin, GenericViewSet):
+	serializer_class = UserSerializer
+
+	def get_queryset(self):
+		return get_user_model().objects.filter()
 

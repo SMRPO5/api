@@ -144,6 +144,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+SWAGGER_SETTINGS = {
+	'DEFAULT_MODEL_DEPTH': 1,
+	'DEFAULT_MODEL_RENDERING': 'example',
+	'DOC_EXPANSION': 'None',
+}
+
+LOGIN_URL = 'rest_framework:login'
+LOGOUT_URL = 'rest_framework:logout'
+
+LOGIN_REDIRECT_URL = '/'
+
 STATIC_URL = '/static/'
 DEFENDER_LOGIN_FAILURE_LIMIT = 2
 DEFENDER_COOLOFF_TIME = 60
