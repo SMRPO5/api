@@ -13,7 +13,7 @@ class EmailUserAdmin(UserAdmin):
 					'fields': ('email', 'first_name', 'last_name', 'password')
 				}),
 				(_('Permissions'), {
-					'fields': ('is_active', 'is_staff', 'is_superuser', 'allowed_roles')
+					'fields': ('is_active', 'is_staff', 'is_superuser', 'allowed_roles', 'groups')
 				}),
 				(_('Important dates'), {
 					'fields': ('last_login', 'date_joined')
