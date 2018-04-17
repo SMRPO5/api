@@ -15,7 +15,7 @@ class Project(BaseModel):
 	name = models.CharField(max_length=256)
 	buyer_name = models.CharField(max_length=512)
 	start_date = models.DateTimeField()
-	end_date = models.DateTimeField()
+	end_date = models.DateTimeField(null=True, blank=True)
 	estimated_end_date = models.DateTimeField()
 	dev_group = models.ForeignKey(DevGroup, on_delete=models.CASCADE)
 	is_active = models.BooleanField()
