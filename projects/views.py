@@ -3,15 +3,21 @@ from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveMode
 	DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .serializers import *
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.permissions import DjangoModelPermissions
 
 
 class ProjectViewSet(ModelViewSet):
 	serializer_class = ProjectSerializer
+	filter_backends = (DjangoFilterBackend, )
+
+	filter_fields = {
+		'dev_group__membership__user': ['exact', 'in']
+	}
 
 	def get_queryset(self):
-		return Project.objects.all()
+		return Project.objects.filter()
 
 
 class CommentViewSet(ModelViewSet):
