@@ -18,7 +18,7 @@ class Project(BaseModel):
 	end_date = models.DateTimeField(null=True, blank=True)
 	estimated_end_date = models.DateTimeField()
 	dev_group = models.ForeignKey(DevGroup, on_delete=models.CASCADE)
-	is_active = models.BooleanField()
+	is_active = models.BooleanField(default=True)
 
 
 class Comment(BaseModel):
