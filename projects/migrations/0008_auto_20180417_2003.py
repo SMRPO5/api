@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='card',
             name='column',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='projects.Column'),
+            field=models.ForeignKey(null=True, blank=True, on_delete=django.db.models.deletion.CASCADE, to='projects.Column'),
             preserve_default=False,
         ),
         migrations.AddField(
