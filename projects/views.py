@@ -37,6 +37,10 @@ class CardTypeViewSet(ModelViewSet):
 class LaneViewSet(ModelViewSet):
 	serializer_class = LaneSerializer
 
+	filter_fields = {
+		'project': ['exact', 'in']
+	}
+
 	def get_queryset(self):
 		return Lane.objects.all()
 
