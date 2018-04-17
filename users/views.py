@@ -11,7 +11,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 class UserViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
 	serializer_class = UserSerializer
 	permission_classes = (IsAuthenticated, DjangoModelPermissions)
-	filter_backends = (DjangoFilterBackend, )
 
 	filter_fields = ('allowed_roles__name', )
 

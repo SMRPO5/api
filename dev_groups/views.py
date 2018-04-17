@@ -5,13 +5,14 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.permissions import DjangoModelPermissions
+from django.db.models import Prefetch
 
 
 class DevGroupViewSet(ModelViewSet):
 	serializer_class = DevGroupSerializer
 
 	def get_queryset(self):
-		return DevGroup.objects.all()
+		return DevGroup.objects.filter().prefetch_related(Prefetch('membership_set', queryset=Membership.objects.filter(is_active=True)))
 
 
 class MemberShipViewSet(DestroyModelMixin, GenericViewSet):

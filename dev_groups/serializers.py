@@ -26,13 +26,15 @@ class DevGroupSerializer(serializers.ModelSerializer):
         return dev_group
 
     def update(self, instance, validated_data):
-        for membership in instance.membership_set.all():
-            if not any(m['user'] == membership.user for m in validated_data.get('membership_set')):
-                membership.delete()
+        for membership in instance.members.all():
+            m = Membership.objects.get(user=membership, dev_group=instance)
+            if not any(m_validated['user'] == membership for m_validated in validated_data.get('membership_set')):
+                m.delete()
             else:
-                if not membership.is_active:
-                    membership.is_active = True
-                    membership.save()
+                m = Membership.objects.get(user=membership, dev_group=instance)
+                if not m.is_active:
+                    m.is_active = True
+                    m.save()
         return instance
 
     class Meta:
