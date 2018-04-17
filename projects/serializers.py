@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Comment, CardType, Lane, LoggedTime, Task, Card
+from .models import Project, Comment, CardType, Lane, LoggedTime, Task, Card, Column
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -49,4 +49,21 @@ class CardSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Card
+		fields = '__all__'
+
+
+class ChildColumnSerializer(serializers.ModelSerializer):
+	cards = CardSerializer(source='card_set', many=True, read_only=True)
+
+	class Meta:
+		model = Column
+		fields = '__all__'
+
+
+class ColumnSerializer(serializers.ModelSerializer):
+	subcolumns = ChildColumnSerializer(many=True, read_only=True)
+	cards = CardSerializer(source='card_set', many=True, read_only=True)
+
+	class Meta:
+		model = Column
 		fields = '__all__'

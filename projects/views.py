@@ -41,6 +41,13 @@ class LaneViewSet(ModelViewSet):
 		return Lane.objects.all()
 
 
+class ColumnViewSet(ModelViewSet):
+	serializer_class = ColumnSerializer
+
+	def get_queryset(self):
+		return Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns__card_set', 'card_set')
+
+
 class LoggedTimeViewSet(ModelViewSet):
 	serializer_class = LoggedTimeSerializer
 
