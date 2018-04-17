@@ -26,6 +26,10 @@ class DevGroupSerializer(serializers.ModelSerializer):
         return dev_group
 
     def update(self, instance, validated_data):
+        print(instance)
+        for membership in instance.membership_set.all():
+            if not any(m['user'] == membership.user for m in validated_data.get('membership_set')):
+                membership.delete()
         pass
 
     class Meta:

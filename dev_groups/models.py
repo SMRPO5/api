@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import Group
+from django.utils import timezone
 
 
 class DevGroup(models.Model):
@@ -17,9 +18,16 @@ class Membership(models.Model):
     dev_group = models.ForeignKey(DevGroup, on_delete=models.CASCADE)
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
+    date_removed = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.is_active:
+            self.date_joined = timezone.now()
+            self.date_removed = None
+        return super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        # TODO auditlog
         self.is_active = False
+        self.date_removed = timezone.now()
         self.save()
 

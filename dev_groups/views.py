@@ -8,9 +8,16 @@ from rest_framework.permissions import DjangoModelPermissions
 
 
 class DevGroupViewSet(ModelViewSet):
-    serializer_class = DevGroupSerializer
-    # permission_classes = [AllowAny]
+	serializer_class = DevGroupSerializer
 
-    def get_queryset(self):
-        return DevGroup.objects.all()
+	def get_queryset(self):
+		return DevGroup.objects.all()
+
+
+class MemberShipViewSet(DestroyModelMixin, GenericViewSet):
+
+	serializer_class = MembershipSerializer
+
+	def get_queryset(self):
+		return Membership.objects.all()
 
