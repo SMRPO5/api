@@ -37,6 +37,13 @@ class Lane(BaseModel):
 	order = models.CharField(max_length=512)
 	is_active = models.BooleanField(default=True)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='lanes')
+	column = models.ManyToManyField('Column', blank=True, related_name='lanes')
+
+
+class Column(BaseModel):
+	name = models.CharField(max_length=256)
+	parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='subcolumns')
+	card_limit = models.PositiveIntegerField()
 
 
 class LoggedTime(BaseModel):
@@ -97,6 +104,7 @@ class Card(BaseModel):
 	size = models.PositiveIntegerField()
 	deadline = models.DateTimeField()
 	lane = models.ForeignKey(Lane, on_delete=models.CASCADE, related_name='cards')
+	column = models.ForeignKey(Column, on_delete=models.CASCADE)
 	comments = models.ManyToManyField(Comment, related_name='cards', blank=True)
 
 
