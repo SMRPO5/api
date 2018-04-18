@@ -29,7 +29,7 @@ class Project(BaseModel):
 
 
 class Comment(BaseModel):
-	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments')
 	message = models.TextField()
 
 
@@ -39,12 +39,19 @@ class CardType(BaseModel):
 	color = models.CharField(max_length=128)
 
 
+class Board(BaseModel):
+	name = models.CharField(max_length=256)
+	order = models.CharField(max_length=512)
+	is_active = models.BooleanField(default=True)
+
+
 class Lane(BaseModel):
 	name = models.CharField(max_length=256)
 	order = models.CharField(max_length=512)
 	is_active = models.BooleanField(default=True)
+	board = models.ForeignKey(Board, blank=True, null=True, on_delete=models.CASCADE, related_name='lanes')
 	project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='lanes')
-	column = models.ManyToManyField('Column', blank=True, related_name='lanes')
+	columns = models.ManyToManyField('Column', blank=True, related_name='lanes')
 
 
 class Column(BaseModel):

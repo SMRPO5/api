@@ -36,6 +36,13 @@ class CardTypeViewSet(ModelViewSet):
 		return CardType.objects.all()
 
 
+class BoardViewSet(ModelViewSet):
+	serializer_class = BoardSerializer
+
+	def get_queryset(self):
+		return Board.objects.all()
+
+
 class LaneViewSet(ModelViewSet):
 	serializer_class = LaneSerializer
 
