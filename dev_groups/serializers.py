@@ -1,3 +1,4 @@
+from django.db.models import Prefetch
 from rest_framework import serializers
 from .models import DevGroup, Membership
 from django.contrib.auth import get_user_model
@@ -47,7 +48,8 @@ class DevGroupSerializer(serializers.ModelSerializer):
 			if not m.is_active and any(m.user == a['user'] for a in membership_set):
 				m.is_active = True
 				m.save()
-		return super().update(instance, validated_data)
+		return DevGroup.objects.filter(id=instance.id).prefetch_related(Prefetch('membership_set', queryset=Membership.objects.filter(is_active=True)))[0]
+
 
 	class Meta:
 		model = DevGroup
