@@ -1,7 +1,9 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import Group
+from django.dispatch import receiver
 from django.utils import timezone
+from django.db.models.signals import m2m_changed
 
 
 class DevGroup(models.Model):
@@ -10,6 +12,14 @@ class DevGroup(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# @receiver(m2m_changed, sender='dev_groups.Membership')
+# def on_members_change(sender, signal, action, instance, **kwargs):
+#     kwargs['qwe'] = 'qwe'
+#     for membership in instance.membership_set.all():
+#         membership.is_active = False
+#         membership.save()
 
 
 class Membership(models.Model):

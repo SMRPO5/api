@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import DevGroup, Membership
 from django.contrib.auth import get_user_model
+from rest_framework.utils import model_meta
 
 
 class MembershipSerializer(serializers.ModelSerializer):
@@ -33,16 +34,20 @@ class DevGroupSerializer(serializers.ModelSerializer):
 		return dev_group
 
 	def update(self, instance, validated_data):
-		for membership in instance.members.all():
-			m = Membership.objects.get(user=membership, dev_group=instance)
-			if not any(m_validated['user'] == membership for m_validated in validated_data.get('membership_set')):
+		membership_set = validated_data.pop('membership_set', [])
+		for m in instance.membership_set.all():
+			if m.is_active and not any(m.user == a['user'] for a in membership_set):
 				m.delete()
-			else:
-				m = Membership.objects.get(user=membership, dev_group=instance)
-				if not m.is_active:
-					m.is_active = True
-					m.save()
-		return instance
+
+		for membership in membership_set:
+			roles = membership.pop('role')
+			m, created = Membership.objects.get_or_create(**membership, dev_group=instance)
+
+			m.role.set(roles)
+			if not m.is_active and any(m.user == a['user'] for a in membership_set):
+				m.is_active = True
+				m.save()
+		return super().update(instance, validated_data)
 
 	class Meta:
 		model = DevGroup
