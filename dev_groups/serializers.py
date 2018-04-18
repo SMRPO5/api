@@ -4,39 +4,46 @@ from django.contrib.auth import get_user_model
 
 
 class MembershipSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(slug_field='email', queryset=get_user_model().objects.all())
-    dev_group = serializers.PrimaryKeyRelatedField(read_only=True)
+	user = serializers.SlugRelatedField(slug_field='email', queryset=get_user_model().objects.all())
+	dev_group = serializers.PrimaryKeyRelatedField(read_only=True)
 
-    class Meta:
-        model = Membership
-        fields = '__all__'
+	class Meta:
+		model = Membership
+		fields = '__all__'
 
 
 class DevGroupSerializer(serializers.ModelSerializer):
-    members = MembershipSerializer(source='membership_set', many=True)
+	members = MembershipSerializer(source='membership_set', many=True)
 
-    def create(self, validated_data):
-        memberships = validated_data.get('membership_set')
-        dev_group = DevGroup.objects.create(name=validated_data.get('name'))
+	def validate_members(self, value):
+		if not (any('Kanban Master' in map(lambda x: x.name, membership['role']) for membership in value) and
+				any('Developer' in map(lambda x: x.name, membership['role']) for membership in value) and
+				any('Product Owner' in map(lambda x: x.name, membership['role']) for membership in value)):
+			raise serializers.ValidationError('All roles must be filled.')
+		return value
 
-        for membership in memberships:
-            m, created = Membership.objects.get_or_create(user=membership.get('user'), dev_group=dev_group)
-            m.role.set(membership.get('role'))
+	def create(self, validated_data):
+		memberships = validated_data.get('membership_set')
+		dev_group = DevGroup.objects.create(name=validated_data.get('name'))
 
-        return dev_group
+		for membership in memberships:
+			m, created = Membership.objects.get_or_create(user=membership.get('user'), dev_group=dev_group)
+			m.role.set(membership.get('role'))
 
-    def update(self, instance, validated_data):
-        for membership in instance.members.all():
-            m = Membership.objects.get(user=membership, dev_group=instance)
-            if not any(m_validated['user'] == membership for m_validated in validated_data.get('membership_set')):
-                m.delete()
-            else:
-                m = Membership.objects.get(user=membership, dev_group=instance)
-                if not m.is_active:
-                    m.is_active = True
-                    m.save()
-        return instance
+		return dev_group
 
-    class Meta:
-        model = DevGroup
-        fields = '__all__'
+	def update(self, instance, validated_data):
+		for membership in instance.members.all():
+			m = Membership.objects.get(user=membership, dev_group=instance)
+			if not any(m_validated['user'] == membership for m_validated in validated_data.get('membership_set')):
+				m.delete()
+			else:
+				m = Membership.objects.get(user=membership, dev_group=instance)
+				if not m.is_active:
+					m.is_active = True
+					m.save()
+		return instance
+
+	class Meta:
+		model = DevGroup
+		fields = '__all__'

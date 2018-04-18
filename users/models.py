@@ -89,6 +89,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 		self.is_active = False
 		self.save()
 
+	def is_kanban_master_allowed(self):
+		return self.allowed_roles.filter(name='Kanban Master').exists()
+
 	@property
 	def username(self):
 		return self.email
