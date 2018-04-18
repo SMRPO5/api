@@ -17,8 +17,15 @@ class Project(BaseModel):
 	start_date = models.DateTimeField()
 	end_date = models.DateTimeField(null=True, blank=True)
 	estimated_end_date = models.DateTimeField()
-	dev_group = models.ForeignKey(DevGroup, on_delete=models.CASCADE)
+	dev_group = models.ForeignKey(DevGroup, on_delete=models.CASCADE, null=True, blank=True)
 	is_active = models.BooleanField(default=True)
+
+	def delete(self, *args, **kwargs):
+		if self.lanes.filter(cards__isnull=False).exists():
+			self.is_active = False
+			self.save()
+		else:
+			super().delete(*args, **kwargs)
 
 
 class Comment(BaseModel):

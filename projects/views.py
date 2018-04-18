@@ -3,6 +3,7 @@ from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveMode
 	DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .serializers import *
+from api.permissions import KANBAN_MASTER, KanBanMasterCanCreateUpdateDelete
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.permissions import DjangoModelPermissions
@@ -11,6 +12,7 @@ from rest_framework.permissions import DjangoModelPermissions
 class ProjectViewSet(ModelViewSet):
 	serializer_class = ProjectSerializer
 	filter_backends = (DjangoFilterBackend, )
+	permission_classes = (KanBanMasterCanCreateUpdateDelete, IsAuthenticated)
 
 	filter_fields = {
 		'dev_group__membership__user': ['exact', 'in']

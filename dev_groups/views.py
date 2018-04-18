@@ -3,7 +3,7 @@ from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveMode
 	DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .serializers import *
-from .permissions import KanBanMasterCanCreateUpdateDelete, KANBAN_MASTER
+from api.permissions import KanBanMasterCanCreateUpdateDelete, KANBAN_MASTER
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.permissions import DjangoModelPermissions
 from django.db.models import Prefetch
