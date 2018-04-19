@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Project, Comment, CardType, Lane, LoggedTime, Task, Card, Column, Board
+from users.serializers import UserSerializer
+from django.contrib.auth import get_user_model
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -46,6 +48,16 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class CardSerializer(serializers.ModelSerializer):
+	assignee = UserSerializer(fields=('id', 'email', 'first_name', 'last_name'))
+
+	def to_internal_value(self, data):
+		self.fields['assignee'] = serializers.PrimaryKeyRelatedField(write_only=True, required=True, queryset=get_user_model().objects.all())
+		return super().to_internal_value(data)
+
+	def to_representation(self, card):
+		self.fields['assignee'] = UserSerializer(read_only=True, fields=('id', 'email', 'first_name', 'last_name'))
+		return super(CardSerializer, self).to_representation(card)
+
 	class Meta:
 		model = Card
 		fields = '__all__'
