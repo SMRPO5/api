@@ -20,7 +20,7 @@ class ProjectViewSet(ModelViewSet):
 	}
 
 	def get_queryset(self):
-		return Project.objects.filter(is_active=True)
+		return Project.objects.filter(is_active=True).prefetch_related('lanes__columns__cards')
 
 
 class CommentViewSet(ModelViewSet):

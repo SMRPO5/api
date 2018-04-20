@@ -4,13 +4,7 @@ from users.serializers import UserSerializer
 from django.contrib.auth import get_user_model
 
 
-<<<<<<< HEAD
-class ProjectSerializer(serializers.ModelSerializer):
-	has_cards = serializers.ReadOnlyField()
-
-=======
 class CommentSerializer(serializers.ModelSerializer):
->>>>>>> Modify database
 	class Meta:
 		model = Comment
 		fields = '__all__'
@@ -36,6 +30,8 @@ class BoardSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+	has_cards = serializers.ReadOnlyField()
+
 	class Meta:
 		model = Project
 		fields = '__all__'

@@ -37,6 +37,7 @@ class Board(BaseModel):
 class Project(BaseModel):
 	name = models.CharField(max_length=256)
 	buyer_name = models.CharField(max_length=512)
+	codename = models.CharField(max_length=512)
 	start_date = models.DateTimeField()
 	end_date = models.DateTimeField(null=True, blank=True)
 	estimated_end_date = models.DateTimeField()
@@ -46,10 +47,10 @@ class Project(BaseModel):
 
 	@property
 	def has_cards(self):
-		return Card.objects.filter(lane__in=self.lanes.all()).exists()
+		return Card.objects.filter(column__lane__in=self.lanes.all()).exists()
 
 	def delete(self, *args, **kwargs):
-		if self.lanes.filter(cards__isnull=False).exists():
+		if self.lanes.filter(columns__cards__isnull=False).exists():
 			self.is_active = False
 			self.save()
 		else:
