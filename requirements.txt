@@ -13,3 +13,4 @@ gevent
 django-defender
 django-extensions
 django-cors-headers
+django-reversion

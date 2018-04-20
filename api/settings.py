@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 	'django_extensions',
 	'defender',
 	'corsheaders',
+	'reversion'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

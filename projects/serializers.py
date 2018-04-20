@@ -4,19 +4,23 @@ from users.serializers import UserSerializer
 from django.contrib.auth import get_user_model
 
 
+<<<<<<< HEAD
 class ProjectSerializer(serializers.ModelSerializer):
 	has_cards = serializers.ReadOnlyField()
 
-	class Meta:
-		model = Project
-		fields = '__all__'
-
-
+=======
 class CommentSerializer(serializers.ModelSerializer):
+>>>>>>> Modify database
 	class Meta:
 		model = Comment
 		fields = '__all__'
 		read_only_fields = ('date_created', 'date_changed')
+
+
+class LoggedTimeSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = LoggedTime
+		fields = '__all__'
 
 
 class CardTypeSerializer(serializers.ModelSerializer):
@@ -31,15 +35,15 @@ class BoardSerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 
-class LaneSerializer(serializers.ModelSerializer):
+class ProjectSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = Lane
+		model = Project
 		fields = '__all__'
 
 
-class LoggedTimeSerializer(serializers.ModelSerializer):
+class LaneSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = LoggedTime
+		model = Lane
 		fields = '__all__'
 
 
@@ -51,6 +55,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
 class CardSerializer(serializers.ModelSerializer):
 	assignee = UserSerializer(fields=('id', 'email', 'first_name', 'last_name'))
+	tasks = TaskSerializer(many=True, read_only=True)
 
 	def to_internal_value(self, data):
 		self.fields['assignee'] = serializers.PrimaryKeyRelatedField(write_only=True, required=True, queryset=get_user_model().objects.all())
@@ -66,7 +71,7 @@ class CardSerializer(serializers.ModelSerializer):
 
 
 class ChildColumnSerializer(serializers.ModelSerializer):
-	cards = CardSerializer(source='card_set', many=True, read_only=True)
+	cards = CardSerializer(many=True, read_only=True)
 
 	class Meta:
 		model = Column
@@ -75,7 +80,7 @@ class ChildColumnSerializer(serializers.ModelSerializer):
 
 class ColumnSerializer(serializers.ModelSerializer):
 	subcolumns = ChildColumnSerializer(many=True, read_only=True)
-	cards = CardSerializer(source='card_set', many=True, read_only=True)
+	cards = CardSerializer(many=True, read_only=True)
 
 	class Meta:
 		model = Column

@@ -57,9 +57,12 @@ class LaneViewSet(ModelViewSet):
 
 class ColumnViewSet(ModelViewSet):
 	serializer_class = ColumnSerializer
+	filter_fields = {
+		'lane__project': ['exact', 'in']
+	}
 
 	def get_queryset(self):
-		return Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns__card_set', 'card_set')
+		return Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns__cards__tasks', 'cards__tasks')
 
 
 class LoggedTimeViewSet(ModelViewSet):

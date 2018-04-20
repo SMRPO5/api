@@ -1,11 +1,25 @@
 from django.contrib import admin
 from .models import *
+from reversion.admin import VersionAdmin
+
+
+@admin.register(Card)
+class CardAdmin(VersionAdmin):
+	pass
+
+
+@admin.register(Lane)
+class LanesAdmin(VersionAdmin):
+	pass
+
+
+@admin.register(Board)
+class BoardAdmin(VersionAdmin):
+	pass
 
 
 admin.site.register(Project)
 admin.site.register(CardType)
-admin.site.register(Card)
-admin.site.register(Lane)
 admin.site.register(Column)
 admin.site.register(Comment)
 admin.site.register(LoggedTime)
