@@ -100,30 +100,6 @@ class Task(BaseModel):
 
 
 class Card(BaseModel):
-	# BACKLOG = 'backlog'
-	# PRODUCT_BACKLOG = 'product_backlog'
-	# NEXT = 'next'
-	# ANALYSIS_AND_DESIGN = 'analysis_and_design'
-	# CODING = 'coding'
-	# TESTING = 'testing'
-	# INTEGRATION = 'integration'
-	# DOCUMENTATION = 'documentation'
-	# ACCEPTANCE = 'acceptance'
-	# DONE = 'done'
-	# ARCHIVE = 'archive'
-	# TYPE_CHOICES = (
-	# 	(BACKLOG, 'Backlog'),
-	# 	(PRODUCT_BACKLOG, 'Product backlog'),
-	# 	(NEXT, 'Next'),
-	# 	(ANALYSIS_AND_DESIGN, 'Analysis & Design'),
-	# 	(CODING, 'Coding'),
-	# 	(TESTING, 'Testing'),
-	# 	(INTEGRATION, 'Integration'),
-	# 	(ACCEPTANCE, 'Acceptance'),
-	# 	(DONE, 'Done'),
-	# 	(ARCHIVE, 'Archive'),
-	# )
-	# type = models.CharField(choices=TYPE_CHOICES, max_length=128)
 	LOW = 4
 	AVERAGE = 3
 	HIGH = 2
@@ -135,6 +111,7 @@ class Card(BaseModel):
 		(CRITICAL, 'Critical')
 	)
 	type = models.ForeignKey(CardType, on_delete=models.CASCADE)
+	codename = models.CharField(max_length=512, null=True, blank=True)
 	name = models.CharField(max_length=512)
 	description = models.TextField()
 	assignee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
