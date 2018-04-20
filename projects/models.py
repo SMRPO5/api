@@ -1,7 +1,6 @@
 from django.db import models
 from dev_groups.models import DevGroup
 from django.conf import settings
-from django.core.exceptions import ValidationError
 
 
 class BaseModel(models.Model):
@@ -26,11 +25,11 @@ class Project(BaseModel):
 		return Card.objects.filter(lane__in=self.lanes.all()).exists()
 
 	def delete(self, *args, **kwargs):
-		if not self.lanes.filter(cards__isnull=False).exists():
+		if self.lanes.filter(cards__isnull=False).exists():
 			self.is_active = False
 			self.save()
 		else:
-			raise ValidationError("Cannot remove project with cards")
+			super().delete(*args, **kwargs)
 
 
 class Comment(BaseModel):
