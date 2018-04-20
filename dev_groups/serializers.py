@@ -48,6 +48,7 @@ class DevGroupSerializer(serializers.ModelSerializer):
 			if not m.is_active and any(m.user == a['user'] for a in membership_set):
 				m.is_active = True
 				m.save()
+		instance = super().update(instance, validated_data)
 		return DevGroup.objects.filter(id=instance.id).prefetch_related(Prefetch('membership_set', queryset=Membership.objects.filter(is_active=True)))[0]
 
 
