@@ -80,6 +80,7 @@ class Column(BaseModel):
 	name = models.CharField(max_length=256)
 	parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='subcolumns')
 	lane = models.ForeignKey(Lane, on_delete=models.CASCADE, related_name='columns')
+	order = models.PositiveIntegerField()
 	card_limit = models.PositiveIntegerField()
 
 	def __str__(self):
@@ -137,6 +138,7 @@ class Card(BaseModel):
 	name = models.CharField(max_length=512)
 	description = models.TextField()
 	assignee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+	order = models.PositiveIntegerField()
 	priority = models.PositiveIntegerField(choices=priority_choices)
 	size = models.PositiveIntegerField()
 	deadline = models.DateTimeField()
