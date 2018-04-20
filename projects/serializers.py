@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+	has_cards = serializers.ReadOnlyField()
+
 	class Meta:
 		model = Project
 		fields = '__all__'

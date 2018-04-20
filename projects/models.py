@@ -22,7 +22,7 @@ class Project(BaseModel):
 
 	@property
 	def has_cards(self):
-		return Card.objects.filter(lane__in=self.lanes.all()).count()
+		return Card.objects.filter(lane__in=self.lanes.all()).exists()
 
 	def delete(self, *args, **kwargs):
 		if self.lanes.filter(cards__isnull=False).exists():
