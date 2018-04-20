@@ -20,6 +20,10 @@ class Project(BaseModel):
 	dev_group = models.ForeignKey(DevGroup, on_delete=models.CASCADE, null=True, blank=True)
 	is_active = models.BooleanField(default=True)
 
+	@property
+	def has_cards(self):
+		return Card.objects.filter(lane__in=self.lanes.all()).count()
+
 	def delete(self, *args, **kwargs):
 		if self.lanes.filter(cards__isnull=False).exists():
 			self.is_active = False

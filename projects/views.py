@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from itertools import islice
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, \
 	DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
@@ -19,7 +20,7 @@ class ProjectViewSet(ModelViewSet):
 	}
 
 	def get_queryset(self):
-		return Project.objects.filter()
+		return Project.objects.filter(is_active=True)
 
 
 class CommentViewSet(ModelViewSet):

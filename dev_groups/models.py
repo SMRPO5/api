@@ -26,7 +26,7 @@ class Membership(models.Model):
     role = models.ManyToManyField(Group)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     dev_group = models.ForeignKey(DevGroup, on_delete=models.CASCADE)
-    date_joined = models.DateTimeField()
+    date_joined = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     date_removed = models.DateTimeField(null=True, blank=True)
 
