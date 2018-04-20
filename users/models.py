@@ -93,5 +93,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 		return self.allowed_roles.filter(name='Kanban Master').exists()
 
 	@property
+	def full_name(self):
+		return '%s %s' % (self.first_name, self.last_name)
+
+	@property
 	def username(self):
 		return self.email

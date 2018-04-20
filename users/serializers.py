@@ -34,6 +34,7 @@ class GroupSerializer(serializers.ModelSerializer):
 
 class UserSerializer(DynamicFieldsModelSerializer):
 	allowed_roles = GroupSerializer(many=True)
+	full_name = serializers.ReadOnlyField()
 
 	class Meta:
 		model = get_user_model()
