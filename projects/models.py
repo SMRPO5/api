@@ -27,11 +27,17 @@ class CardType(BaseModel):
 	is_active = models.BooleanField(default=True)
 	color = models.CharField(max_length=128)
 
+	def __str__(self):
+		return self.name
+
 
 class Board(BaseModel):
 	name = models.CharField(max_length=256)
 	order = models.CharField(max_length=512)
 	is_active = models.BooleanField(default=True)
+
+	def __str__(self):
+		return self.name
 
 
 class Project(BaseModel):
@@ -44,6 +50,9 @@ class Project(BaseModel):
 	board = models.ForeignKey(Board, blank=True, null=True, on_delete=models.CASCADE, related_name='projects')
 	dev_group = models.ForeignKey(DevGroup, on_delete=models.CASCADE, null=True, blank=True)
 	is_active = models.BooleanField(default=True)
+
+	def __str__(self):
+		return self.name
 
 	@property
 	def has_cards(self):
@@ -63,12 +72,18 @@ class Lane(BaseModel):
 	is_active = models.BooleanField(default=True)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='lanes')
 
+	def __str__(self):
+		return self.name
+
 
 class Column(BaseModel):
 	name = models.CharField(max_length=256)
 	parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='subcolumns')
 	lane = models.ForeignKey(Lane, on_delete=models.CASCADE, related_name='columns')
 	card_limit = models.PositiveIntegerField()
+
+	def __str__(self):
+		return self.name
 
 
 class Task(BaseModel):
@@ -78,6 +93,9 @@ class Task(BaseModel):
 	assignee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	is_active = models.BooleanField(default=True)
 	comments = models.ManyToManyField(Comment, blank=True)
+
+	def __str__(self):
+		return self.name
 
 
 class Card(BaseModel):
@@ -124,5 +142,8 @@ class Card(BaseModel):
 	deadline = models.DateTimeField()
 	column = models.ForeignKey(Column, on_delete=models.CASCADE, related_name='cards')
 	comments = models.ManyToManyField(Comment, related_name='cards', blank=True)
+
+	def __str__(self):
+		return self.name
 
 
