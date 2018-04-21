@@ -67,13 +67,11 @@ class Project(BaseModel):
 
 
 class Lane(BaseModel):
-	name = models.CharField(max_length=256)
-	order = models.CharField(max_length=512)
 	is_active = models.BooleanField(default=True)
 	project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='lane')
 
 	def __str__(self):
-		return self.name
+		return self.project.name
 
 
 class Column(BaseModel):

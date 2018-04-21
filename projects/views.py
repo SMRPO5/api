@@ -46,7 +46,7 @@ class BoardViewSet(ModelViewSet):
 		return Board.objects.filter(projects__dev_group__members__in=[self.request.user]).prefetch_related(
 			Prefetch('columns', queryset=Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns')),
 			Prefetch('projects', queryset=Project.objects.filter(dev_group__members__in=[self.request.user])),
-			'projects__cards')
+			'projects__cards').distinct()
 
 
 class LaneViewSet(ModelViewSet):

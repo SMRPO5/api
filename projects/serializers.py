@@ -62,23 +62,24 @@ class ColumnSerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 
-class LaneSerializer(serializers.ModelSerializer):
-	cards = CardSerializer(source='project.cards', many=True, read_only=True)
-
-	def to_representation(self, instance):
-		return super().to_representation(instance)
-
-	class Meta:
-		model = Lane
-		fields = '__all__'
-
-
 class ProjectSerializer(serializers.ModelSerializer):
 	has_cards = serializers.ReadOnlyField()
 	# lane = LaneSerializer(read_only=True)
 
 	class Meta:
 		model = Project
+		fields = '__all__'
+
+
+class LaneSerializer(serializers.ModelSerializer):
+	cards = CardSerializer(source='project.cards', many=True, read_only=True)
+	project = ProjectSerializer()
+
+	def to_representation(self, instance):
+		return super().to_representation(instance)
+
+	class Meta:
+		model = Lane
 		fields = '__all__'
 
 
