@@ -44,7 +44,7 @@ class BoardViewSet(ModelViewSet):
 
 	def get_queryset(self):
 		return Board.objects.filter(projects__dev_group__members__in=[self.request.user]).prefetch_related(
-			'columns__subcolumns',
+			Prefetch('columns', queryset=Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns')),
 			Prefetch('projects', queryset=Project.objects.filter(dev_group__members__in=[self.request.user])),
 			'projects__cards')
 
@@ -52,7 +52,7 @@ class BoardViewSet(ModelViewSet):
 class LaneViewSet(ModelViewSet):
 	serializer_class = LaneSerializer
 
-	filter_fields = ('project',)
+	filter_fields = ('project', 'project__board')
 
 	def get_queryset(self):
 		return Lane.objects.filter(project__dev_group__members__in=[self.request.user]).select_related(

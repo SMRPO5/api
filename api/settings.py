@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 	'rest_framework',
 	'users',
 	'dev_groups',
+	'django_filters',
 	'projects',
 	'drf_yasg',
 	'fixture_magic',
