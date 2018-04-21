@@ -14,14 +14,6 @@ class DevGroup(models.Model):
         return self.name
 
 
-# @receiver(m2m_changed, sender='dev_groups.Membership')
-# def on_members_change(sender, signal, action, instance, **kwargs):
-#     kwargs['qwe'] = 'qwe'
-#     for membership in instance.membership_set.all():
-#         membership.is_active = False
-#         membership.save()
-
-
 class Membership(models.Model):
     role = models.ManyToManyField(Group)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

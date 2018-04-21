@@ -41,20 +41,19 @@ class BoardViewSet(ModelViewSet):
 	serializer_class = BoardSerializer
 
 	def get_queryset(self):
-		return Board.objects.all()
+		return Board.objects.filter(projects__dev_group__members__in=[self.request.user]).distinct()
 
 
 class LaneViewSet(ModelViewSet):
 	serializer_class = LaneSerializer
 
-	filter_fields = {
-		'project': ['exact']
-	}
+	filter_fields = ('project',)
 
 	def get_queryset(self):
-		return Lane.objects.all().select_related('project__board').prefetch_related('project__cards__assignee',
-																					'project__cards__tasks',
-																					'project__cards__type')
+		return Lane.objects.filter(project__dev_group__members__in=[self.request.user]).select_related(
+			'project__board').prefetch_related('project__cards__assignee',
+											   'project__cards__tasks',
+											   'project__cards__type')
 
 
 class ColumnViewSet(ModelViewSet):
