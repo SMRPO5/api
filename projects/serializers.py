@@ -75,7 +75,7 @@ class LaneSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
 	has_cards = serializers.ReadOnlyField()
-	lane = LaneSerializer(read_only=True)
+	# lane = LaneSerializer(read_only=True)
 
 	class Meta:
 		model = Project
@@ -85,7 +85,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class BoardSerializer(serializers.ModelSerializer):
 	columns = ColumnSerializer(many=True, read_only=True)
 	# lanes = LaneSerializer(source='project.lanes', many=True, read_only=True)
-	# projects = ProjectSerializer(many=True, read_only=True)
+	projects = ProjectSerializer(many=True, read_only=True)
 
 	class Meta:
 		model = Board

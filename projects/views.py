@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from itertools import islice
+
+from django.db.models import Prefetch
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, \
 	DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
@@ -41,7 +43,10 @@ class BoardViewSet(ModelViewSet):
 	serializer_class = BoardSerializer
 
 	def get_queryset(self):
-		return Board.objects.filter(projects__dev_group__members__in=[self.request.user]).distinct()
+		return Board.objects.filter(projects__dev_group__members__in=[self.request.user]).prefetch_related(
+			'columns__subcolumns',
+			Prefetch('projects', queryset=Project.objects.filter(dev_group__members__in=[self.request.user])),
+			'projects__cards')
 
 
 class LaneViewSet(ModelViewSet):
