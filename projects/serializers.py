@@ -23,26 +23,6 @@ class CardTypeSerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 
-class BoardSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Board
-		fields = '__all__'
-
-
-class ProjectSerializer(serializers.ModelSerializer):
-	has_cards = serializers.ReadOnlyField()
-
-	class Meta:
-		model = Project
-		fields = '__all__'
-
-
-class LaneSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Lane
-		fields = '__all__'
-
-
 class TaskSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Task
@@ -55,10 +35,12 @@ class CardSerializer(serializers.ModelSerializer):
 
 	def to_internal_value(self, data):
 		self.fields['assignee'] = serializers.PrimaryKeyRelatedField(write_only=True, required=True, queryset=get_user_model().objects.all())
+		self.fields['type'] = serializers.PrimaryKeyRelatedField(write_only=True, required=True, queryset=CardType.objects.all())
 		return super().to_internal_value(data)
 
 	def to_representation(self, card):
 		self.fields['assignee'] = UserSerializer(read_only=True, fields=('id', 'email', 'first_name', 'last_name'))
+		self.fields['type'] = CardTypeSerializer(read_only=True)
 		return super(CardSerializer, self).to_representation(card)
 
 	class Meta:
@@ -67,8 +49,6 @@ class CardSerializer(serializers.ModelSerializer):
 
 
 class ChildColumnSerializer(serializers.ModelSerializer):
-	cards = CardSerializer(many=True, read_only=True)
-
 	class Meta:
 		model = Column
 		fields = '__all__'
@@ -76,8 +56,37 @@ class ChildColumnSerializer(serializers.ModelSerializer):
 
 class ColumnSerializer(serializers.ModelSerializer):
 	subcolumns = ChildColumnSerializer(many=True, read_only=True)
-	cards = CardSerializer(many=True, read_only=True)
 
 	class Meta:
 		model = Column
+		fields = '__all__'
+
+
+class LaneSerializer(serializers.ModelSerializer):
+	cards = CardSerializer(source='project.cards', many=True, read_only=True)
+
+	def to_representation(self, instance):
+		return super().to_representation(instance)
+
+	class Meta:
+		model = Lane
+		fields = '__all__'
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+	has_cards = serializers.ReadOnlyField()
+	lane = LaneSerializer(read_only=True)
+
+	class Meta:
+		model = Project
+		fields = '__all__'
+
+
+class BoardSerializer(serializers.ModelSerializer):
+	columns = ColumnSerializer(many=True, read_only=True)
+	# lanes = LaneSerializer(source='project.lanes', many=True, read_only=True)
+	# projects = ProjectSerializer(many=True, read_only=True)
+
+	class Meta:
+		model = Board
 		fields = '__all__'

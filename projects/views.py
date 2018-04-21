@@ -12,7 +12,7 @@ from rest_framework.permissions import DjangoModelPermissions
 
 class ProjectViewSet(ModelViewSet):
 	serializer_class = ProjectSerializer
-	filter_backends = (DjangoFilterBackend, )
+	filter_backends = (DjangoFilterBackend,)
 	permission_classes = (KanBanMasterCanCreateUpdateDelete, IsAuthenticated)
 
 	filter_fields = {
@@ -20,7 +20,7 @@ class ProjectViewSet(ModelViewSet):
 	}
 
 	def get_queryset(self):
-		return Project.objects.filter(is_active=True).prefetch_related('lanes__columns__cards')
+		return Project.objects.filter(is_active=True).prefetch_related('cards')
 
 
 class CommentViewSet(ModelViewSet):
@@ -48,11 +48,13 @@ class LaneViewSet(ModelViewSet):
 	serializer_class = LaneSerializer
 
 	filter_fields = {
-		'project': ['exact', 'in']
+		'project': ['exact']
 	}
 
 	def get_queryset(self):
-		return Lane.objects.all()
+		return Lane.objects.all().select_related('project__board').prefetch_related('project__cards__assignee',
+																					'project__cards__tasks',
+																					'project__cards__type')
 
 
 class ColumnViewSet(ModelViewSet):

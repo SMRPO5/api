@@ -6,6 +6,7 @@ from reversion.admin import VersionAdmin
 @admin.register(Card)
 class CardAdmin(VersionAdmin):
 	pass
+	# exclude = ('column', )
 
 
 @admin.register(Lane)

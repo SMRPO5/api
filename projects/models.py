@@ -56,10 +56,10 @@ class Project(BaseModel):
 
 	@property
 	def has_cards(self):
-		return Card.objects.filter(column__lane__in=self.lanes.all()).exists()
+		return self.cards.exists()
 
 	def delete(self, *args, **kwargs):
-		if self.lanes.filter(columns__cards__isnull=False).exists():
+		if self.cards.exists():
 			self.is_active = False
 			self.save()
 		else:
@@ -70,7 +70,7 @@ class Lane(BaseModel):
 	name = models.CharField(max_length=256)
 	order = models.CharField(max_length=512)
 	is_active = models.BooleanField(default=True)
-	project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='lanes')
+	project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='lane')
 
 	def __str__(self):
 		return self.name
@@ -79,7 +79,7 @@ class Lane(BaseModel):
 class Column(BaseModel):
 	name = models.CharField(max_length=256)
 	parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='subcolumns')
-	lane = models.ForeignKey(Lane, on_delete=models.CASCADE, related_name='columns')
+	board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='columns')
 	order = models.PositiveIntegerField()
 	card_limit = models.PositiveIntegerField()
 
@@ -115,11 +115,12 @@ class Card(BaseModel):
 	name = models.CharField(max_length=512)
 	description = models.TextField()
 	assignee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-	order = models.PositiveIntegerField()
+	order = models.PositiveIntegerField(null=True, blank=True)
 	priority = models.PositiveIntegerField(choices=priority_choices)
 	size = models.PositiveIntegerField()
 	deadline = models.DateTimeField()
-	column = models.ForeignKey(Column, on_delete=models.CASCADE, related_name='cards')
+	column = models.ForeignKey(Column, on_delete=models.CASCADE, related_name='cards', null=True, blank=True)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='cards', null=True, blank=True)
 	comments = models.ManyToManyField(Comment, related_name='cards', blank=True)
 
 	def __str__(self):
