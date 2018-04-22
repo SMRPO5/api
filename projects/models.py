@@ -33,7 +33,7 @@ class CardType(BaseModel):
 
 class Board(BaseModel):
 	name = models.CharField(max_length=256)
-	order = models.CharField(max_length=512)
+	order = models.PositiveIntegerField(default=1)
 	is_active = models.BooleanField(default=True)
 
 	def __str__(self):

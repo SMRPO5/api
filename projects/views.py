@@ -43,6 +43,12 @@ class BoardViewSet(ModelViewSet):
 	serializer_class = BoardSerializer
 
 	def get_queryset(self):
+		if self.request.user.is_kanban_master_allowed() or self.request.user.is_superuser:
+			return Board.objects.filter().prefetch_related(
+				Prefetch('columns', queryset=Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns')),
+				Prefetch('projects', queryset=Project.objects.filter()),
+				'projects__cards').distinct()
+
 		return Board.objects.filter(projects__dev_group__members__in=[self.request.user]).prefetch_related(
 			Prefetch('columns', queryset=Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns')),
 			Prefetch('projects', queryset=Project.objects.filter(dev_group__members__in=[self.request.user])),

@@ -64,6 +64,7 @@ services:
       - DJANGO_SETTINGS_MODULE
       - POSTGRES_PASSWORD
       - DB_HOST
+      - DEBUG
     links:
       - db
       
