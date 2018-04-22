@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.utils import timezone
 
@@ -14,14 +14,6 @@ def set_initial_column_on_card(sender, instance, **kwargs):
 			instance.order = first_column.cards.latest('order').order + 1
 		except (Card.DoesNotExist, TypeError) as e:
 			instance.order = 1
-		instance.save()
-	else:
-		if instance.column.column_type == Column.IN_PROGRESS:
-			instance.development_started = timezone.now()
-		elif instance.column.column_type == Column.DONE:
-			instance.end_date = timezone.now()
-		elif instance.column.column_type == Column.REQUESTED:
-			instance.development_started = None
 		instance.save()
 
 

@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+
 from dev_groups.models import DevGroup
 from django.conf import settings
 
@@ -143,6 +145,15 @@ class Card(BaseModel):
 	@property
 	def is_in_done(self):
 		return self.column.column_type == Column.DONE
+
+	def save(self, *args, **kwargs):
+		if self.column.column_type == Column.IN_PROGRESS:
+			self.development_started = timezone.now()
+		elif self.column.column_type == Column.DONE:
+			self.end_date = timezone.now()
+		elif self.column.column_type == Column.REQUESTED:
+			self.development_started = None
+		super().save(*args, **kwargs)
 
 	def __str__(self):
 		return self.name
