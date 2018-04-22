@@ -128,8 +128,8 @@ class Card(BaseModel):
 	deadline = models.DateTimeField()
 	end_date = models.DateTimeField(null=True, blank=True)
 	development_started = models.DateTimeField(null=True, blank=True)
-	column = models.ForeignKey(Column, on_delete=models.CASCADE, related_name='cards', null=True, blank=True)
-	project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='cards', null=True, blank=True)
+	column = models.ForeignKey(Column, on_delete=models.CASCADE, related_name='cards')
+	project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='cards')
 	comments = models.ManyToManyField(Comment, related_name='cards', blank=True)
 
 	@property
