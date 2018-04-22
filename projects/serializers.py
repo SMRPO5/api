@@ -1,4 +1,8 @@
+import json
+
 from rest_framework import serializers
+from reversion.models import Version, Revision
+
 from .models import Project, Comment, CardType, Lane, LoggedTime, Task, Card, Column, Board, WIPViolation
 from users.serializers import UserSerializer
 from django.contrib.auth import get_user_model
@@ -106,4 +110,25 @@ class WIPViolationSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = WIPViolation
+		fields = '__all__'
+
+
+class RevisionSerializer(serializers.ModelSerializer):
+	user = UserSerializer(fields=('id', 'email', 'first_name', 'last_name'), read_only=True)
+
+	class Meta:
+		model = Revision
+		fields = '__all__'
+
+
+class RevisionCardSerializer(serializers.ModelSerializer):
+	serialized_data = serializers.JSONField()
+	revision = RevisionSerializer()
+
+	def to_representation(self, instance):
+		instance.serialized_data = json.loads(instance.serialized_data)
+		return super().to_representation(instance)
+
+	class Meta:
+		model = Version
 		fields = '__all__'

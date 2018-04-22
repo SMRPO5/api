@@ -46,7 +46,8 @@ INSTALLED_APPS = [
 	'django_extensions',
 	'defender',
 	'corsheaders',
-	'reversion'
+	'reversion',
+	'fieldsignals'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

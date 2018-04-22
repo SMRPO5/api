@@ -5,6 +5,7 @@ from django.db.models import Prefetch
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, \
 	DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from reversion.models import Version
 
 from projects.models import WIPViolation
 from .serializers import *
@@ -12,6 +13,8 @@ from api.permissions import KANBAN_MASTER, KanBanMasterCanCreateUpdateDelete
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.permissions import DjangoModelPermissions
+from reversion.views import RevisionMixin
+import reversion
 
 
 class ProjectViewSet(ModelViewSet):
@@ -93,11 +96,14 @@ class TaskViewSet(ModelViewSet):
 		return Task.objects.all()
 
 
-class CardViewSet(ModelViewSet):
+class CardViewSet(RevisionMixin, ModelViewSet):
 	serializer_class = CardSerializer
 
 	def get_queryset(self):
 		return Card.objects.all()
+
+	def update(self, request, *args, **kwargs):
+		return super().update(request, *args, **kwargs)
 
 
 class WIPViolationViewSet(ModelViewSet):
@@ -108,3 +114,11 @@ class WIPViolationViewSet(ModelViewSet):
 
 	def perform_create(self, serializer):
 		serializer.save(violation_by=self.request.user)
+
+
+class CardHistoryViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+	serializer_class = RevisionCardSerializer
+	lookup_field = 'object_id'
+
+	def get_queryset(self):
+		return Version.objects.get_for_object(Card.objects.get(id=self.kwargs['card_id']))
