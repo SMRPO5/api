@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Comment, CardType, Lane, LoggedTime, Task, Card, Column, Board
+from .models import Project, Comment, CardType, Lane, LoggedTime, Task, Card, Column, Board, WIPViolation
 from users.serializers import UserSerializer
 from django.contrib.auth import get_user_model
 
@@ -93,4 +93,12 @@ class BoardSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Board
+		fields = '__all__'
+
+
+class WIPViolationSerializer(serializers.ModelSerializer):
+	violation_by = UserSerializer(fields=('id', 'email', 'first_name', 'last_name'), read_only=True)
+
+	class Meta:
+		model = WIPViolation
 		fields = '__all__'

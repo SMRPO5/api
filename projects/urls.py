@@ -12,6 +12,7 @@ router.register(r'logged_times', LoggedTimeViewSet, base_name='logged_times')
 router.register(r'tasks', TaskViewSet, base_name='tasks')
 router.register(r'cards', CardViewSet, base_name='cards')
 router.register(r'columns', ColumnViewSet, base_name='cards')
+router.register(r'wip_violations', WIPViolationViewSet, base_name='wip_violations')
 
 urlpatterns = [
 	url(r'^', include(router.urls))

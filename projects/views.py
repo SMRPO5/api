@@ -5,6 +5,8 @@ from django.db.models import Prefetch
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, \
 	DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
+
+from projects.models import WIPViolation
 from .serializers import *
 from api.permissions import KANBAN_MASTER, KanBanMasterCanCreateUpdateDelete
 from django_filters.rest_framework import DjangoFilterBackend
@@ -96,3 +98,13 @@ class CardViewSet(ModelViewSet):
 
 	def get_queryset(self):
 		return Card.objects.all()
+
+
+class WIPViolationViewSet(ModelViewSet):
+	serializer_class = WIPViolationSerializer
+
+	def get_queryset(self):
+		return WIPViolation.objects.all()
+
+	def perform_create(self, serializer):
+		serializer.save(violation_by=self.request.user)

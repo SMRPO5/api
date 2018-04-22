@@ -126,6 +126,8 @@ class Card(BaseModel):
 	priority = models.PositiveIntegerField(choices=priority_choices)
 	size = models.PositiveIntegerField()
 	deadline = models.DateTimeField()
+	end_date = models.DateTimeField(null=True, blank=True)
+	development_started = models.DateTimeField(null=True, blank=True)
 	column = models.ForeignKey(Column, on_delete=models.CASCADE, related_name='cards', null=True, blank=True)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='cards', null=True, blank=True)
 	comments = models.ManyToManyField(Comment, related_name='cards', blank=True)
@@ -145,4 +147,10 @@ class Card(BaseModel):
 	def __str__(self):
 		return self.name
 
+
+class WIPViolation(BaseModel):
+	card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name='wip_violations')
+	violation_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='wip_violations')
+	reason = models.TextField()
+	column = models.ForeignKey(Column, on_delete=models.CASCADE, related_name='wip_violations')
 
