@@ -147,12 +147,16 @@ class Card(BaseModel):
 		return self.column.column_type == Column.DONE
 
 	def save(self, *args, **kwargs):
-		if self.column.column_type == Column.IN_PROGRESS:
-			self.development_started = timezone.now()
-		elif self.column.column_type == Column.DONE:
-			self.end_date = timezone.now()
-		elif self.column.column_type == Column.REQUESTED:
-			self.development_started = None
+		try:
+			if self.column.column_type == Column.IN_PROGRESS:
+				self.development_started = timezone.now()
+			elif self.column.column_type == Column.DONE:
+				self.end_date = timezone.now()
+			elif self.column.column_type == Column.REQUESTED:
+				self.development_started = None
+		except Column.DoesNotExist:
+			first_column = Column.objects.filter(board__projects__in=[self.project], column_type=Column.REQUESTED).order_by('order').first()
+			self.column = first_column
 		super().save(*args, **kwargs)
 
 	def __str__(self):
