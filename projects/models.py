@@ -133,7 +133,7 @@ class Card(BaseModel):
 	comments = models.ManyToManyField(Comment, related_name='cards', blank=True)
 
 	@property
-	def is_in_first_column(self):
+	def is_in_requested(self):
 		return self.column.column_type == Column.REQUESTED
 
 	@property
@@ -141,7 +141,7 @@ class Card(BaseModel):
 		return self.column.column_type == Column.IN_PROGRESS
 
 	@property
-	def is_in_last_column(self):
+	def is_in_done(self):
 		return self.column.column_type == Column.DONE
 
 	def __str__(self):

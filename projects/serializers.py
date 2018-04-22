@@ -32,8 +32,8 @@ class TaskSerializer(serializers.ModelSerializer):
 class CardSerializer(serializers.ModelSerializer):
 	assignee = UserSerializer(fields=('id', 'email', 'first_name', 'last_name'))
 	tasks = TaskSerializer(many=True, read_only=True)
-	is_in_first_column = serializers.ReadOnlyField()
-	is_in_last_column = serializers.ReadOnlyField()
+	is_in_requested = serializers.ReadOnlyField()
+	is_in_done = serializers.ReadOnlyField()
 	is_in_progress = serializers.ReadOnlyField()
 
 	def to_internal_value(self, data):
