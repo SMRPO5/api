@@ -39,6 +39,8 @@ class CardSerializer(serializers.ModelSerializer):
 	is_in_requested = serializers.ReadOnlyField()
 	is_in_done = serializers.ReadOnlyField()
 	is_in_progress = serializers.ReadOnlyField()
+	is_in_silver_bullet = serializers.ReadOnlyField()
+	is_in_acceptance = serializers.ReadOnlyField()
 
 	def to_internal_value(self, data):
 		self.fields['assignee'] = serializers.PrimaryKeyRelatedField(write_only=True, required=True, queryset=get_user_model().objects.all())

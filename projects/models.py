@@ -146,6 +146,14 @@ class Card(BaseModel):
 	def is_in_done(self):
 		return self.column.column_type == Column.DONE
 
+	@property
+	def is_in_silver_bullet(self):
+		return self.column == Column.objects.filter(board__projects__in=[self.project], column_type=Column.REQUESTED).order_by('order').last()
+
+	@property
+	def is_in_acceptance(self):
+		return self.column == Column.objects.filter(board__projects__in=[self.project], column_type=Column.DONE).order_by('order').first()
+
 	def save(self, *args, **kwargs):
 		try:
 			if self.column.column_type == Column.IN_PROGRESS:
@@ -155,8 +163,12 @@ class Card(BaseModel):
 			elif self.column.column_type == Column.REQUESTED:
 				self.development_started = None
 		except Column.DoesNotExist:
-			first_column = Column.objects.filter(board__projects__in=[self.project], column_type=Column.REQUESTED).order_by('order').first()
-			self.column = first_column
+			if self.type.name == 'Silver bullet':
+				last_column_in_requested = Column.objects.filter(board__projects__in=[self.project], column_type=Column.REQUESTED).order_by('order').last()
+				self.column = last_column_in_requested
+			else:
+				first_column = Column.objects.filter(board__projects__in=[self.project], column_type=Column.REQUESTED).order_by('order').first()
+				self.column = first_column
 		super().save(*args, **kwargs)
 
 	def __str__(self):

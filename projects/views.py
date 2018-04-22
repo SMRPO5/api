@@ -129,8 +129,6 @@ class CardHistoryFilter(filters.FilterSet):
 class CardHistoryViewSet(ListModelMixin, GenericViewSet):
 	serializer_class = RevisionCardSerializer
 	filter_class = CardHistoryFilter
-	# filter_fields = ('object_id', )
 
 	def get_queryset(self):
-		# return Version.objects.get_for_object(Card.objects.get(id=self.kwargs['card_id']))
 		return Version.objects.get_for_model(Card)
