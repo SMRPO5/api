@@ -7,7 +7,7 @@ from projects.models import Card, Column, Project, Lane
 @receiver(post_save, sender=Card)
 def set_initial_column_on_card(sender, instance, **kwargs):
 	if kwargs.get('created', False):
-		first_column = Column.objects.all()[0]
+		first_column = Column.objects.filter(board__projects__in=[instance.project]).order_by('order').first()
 		instance.column = first_column
 		instance.order = first_column.cards.latest('order').order + 1
 		instance.save()

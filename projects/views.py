@@ -94,9 +94,5 @@ class TaskViewSet(ModelViewSet):
 class CardViewSet(ModelViewSet):
 	serializer_class = CardSerializer
 
-	filter_fields = {
-		'lane__project': ['exact', 'in']
-	}
-
 	def get_queryset(self):
 		return Card.objects.all()

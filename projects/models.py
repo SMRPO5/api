@@ -75,9 +75,18 @@ class Lane(BaseModel):
 
 
 class Column(BaseModel):
+	REQUESTED = 1
+	IN_PROGRESS = 2
+	DONE = 3
+	column_type_choice = (
+		(REQUESTED, 'Requested'),
+		(IN_PROGRESS, 'In progress'),
+		(DONE, 'Done'),
+	)
 	name = models.CharField(max_length=256)
 	parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='subcolumns')
 	board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='columns')
+	column_type = models.PositiveIntegerField(choices=column_type_choice)
 	order = models.PositiveIntegerField()
 	card_limit = models.PositiveIntegerField()
 
@@ -120,6 +129,18 @@ class Card(BaseModel):
 	column = models.ForeignKey(Column, on_delete=models.CASCADE, related_name='cards', null=True, blank=True)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='cards', null=True, blank=True)
 	comments = models.ManyToManyField(Comment, related_name='cards', blank=True)
+
+	@property
+	def is_in_first_column(self):
+		return self.column.column_type == Column.REQUESTED
+
+	@property
+	def is_in_progress(self):
+		return self.column.column_type == Column.IN_PROGRESS
+
+	@property
+	def is_in_last_column(self):
+		return self.column.column_type == Column.DONE
 
 	def __str__(self):
 		return self.name
