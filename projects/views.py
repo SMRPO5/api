@@ -13,6 +13,7 @@ from api.permissions import KANBAN_MASTER, KanBanMasterCanCreateUpdateDelete
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.permissions import DjangoModelPermissions
+from django_filters import rest_framework as filters
 from reversion.views import RevisionMixin
 import reversion
 
@@ -108,6 +109,7 @@ class CardViewSet(RevisionMixin, ModelViewSet):
 
 class WIPViolationViewSet(ModelViewSet):
 	serializer_class = WIPViolationSerializer
+	filter_fields = ('card', )
 
 	def get_queryset(self):
 		return WIPViolation.objects.all()
@@ -116,9 +118,19 @@ class WIPViolationViewSet(ModelViewSet):
 		serializer.save(violation_by=self.request.user)
 
 
-class CardHistoryViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+class CardHistoryFilter(filters.FilterSet):
+	card = filters.NumberFilter(name='object_id')
+
+	class Meta:
+		model = Version
+		fields = ('card', )
+
+
+class CardHistoryViewSet(ListModelMixin, GenericViewSet):
 	serializer_class = RevisionCardSerializer
-	lookup_field = 'object_id'
+	filter_class = CardHistoryFilter
+	# filter_fields = ('object_id', )
 
 	def get_queryset(self):
-		return Version.objects.get_for_object(Card.objects.get(id=self.kwargs['card_id']))
+		# return Version.objects.get_for_object(Card.objects.get(id=self.kwargs['card_id']))
+		return Version.objects.get_for_model(Card)

@@ -13,10 +13,10 @@ router.register(r'tasks', TaskViewSet, base_name='tasks')
 router.register(r'cards', CardViewSet, base_name='cards')
 router.register(r'columns', ColumnViewSet, base_name='cards')
 router.register(r'wip_violations', WIPViolationViewSet, base_name='wip_violations')
-# router.register(r'card_history', CardHistoryViewSet, base_name='card_history')
+router.register(r'card_history', CardHistoryViewSet, base_name='card_history')
 
 
 urlpatterns = [
 	url(r'^', include(router.urls)),
-	url(r'^card_history/(?P<card_id>\d+)/$', CardHistoryViewSet.as_view({'get': 'list'}))
-]
+# 	url(r'^card_history/(?P<card_id>\d+)/$', CardHistoryViewSet.as_view({'get': 'list'}))
+	]
