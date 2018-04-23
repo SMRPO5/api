@@ -14,6 +14,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.permissions import DjangoModelPermissions
 from django_filters import rest_framework as filters
+from rest_framework import filters as rest_filters
 from reversion.views import RevisionMixin
 import reversion
 
@@ -38,8 +39,27 @@ class CommentViewSet(ModelViewSet):
 		return Comment.objects.all()
 
 
+class CardTypeFilterBackend(rest_filters.BaseFilterBackend):
+	"""
+	Filter that only allows users to see their card types.
+	"""
+	def filter_queryset(self, request, queryset, view):
+		try:
+			dev_group = Project.objects.get(id=request.query_params.get('project', None)).dev_group
+		except Project.DoesNotExist:
+			return queryset.filter()
+
+		if dev_group.is_kanban_master(request.user):
+			return CardType.objects.exclude(name='Feature request')
+		elif dev_group.is_product_owner(request.user):
+			return CardType.objects.exclude(name='Silver bullet')
+
+		return CardType.objects.exclude(name__in=['Feature request', 'Silver bullet'])
+
+
 class CardTypeViewSet(ModelViewSet):
 	serializer_class = CardTypeSerializer
+	filter_backends = (DjangoFilterBackend, CardTypeFilterBackend)
 
 	def get_queryset(self):
 		return CardType.objects.all()

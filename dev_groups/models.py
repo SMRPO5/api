@@ -13,6 +13,12 @@ class DevGroup(models.Model):
     def __str__(self):
         return self.name
 
+    def is_kanban_master(self, user):
+        return self.membership_set.filter(user=user, role__name='Kanban Master').exists()
+
+    def is_product_owner(self, user):
+        return self.membership_set.filter(user=user, role__name='Product Owner').exists()
+
 
 class Membership(models.Model):
     role = models.ManyToManyField(Group)

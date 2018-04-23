@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group
 from django.db.models import Prefetch
 from rest_framework import serializers
 from .models import DevGroup, Membership
@@ -5,9 +6,25 @@ from django.contrib.auth import get_user_model
 from rest_framework.utils import model_meta
 
 
+class RoleSerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = Group
+		exclude = ('permissions', )
+
+
 class MembershipSerializer(serializers.ModelSerializer):
 	user = serializers.SlugRelatedField(slug_field='email', queryset=get_user_model().objects.all())
 	dev_group = serializers.PrimaryKeyRelatedField(read_only=True)
+	role = RoleSerializer(many=True)
+
+	def to_internal_value(self, data):
+		self.fields['role'] = serializers.PrimaryKeyRelatedField(write_only=True, required=True, queryset=Group.objects.all())
+		return super().to_internal_value(data)
+
+	def to_representation(self, membership):
+		self.fields['role'] = RoleSerializer(read_only=True, many=True)
+		return super().to_representation(membership)
 
 	class Meta:
 		model = Membership

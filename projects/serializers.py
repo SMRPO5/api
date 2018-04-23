@@ -3,6 +3,8 @@ import json
 from rest_framework import serializers
 from reversion.models import Version, Revision
 
+from dev_groups.models import DevGroup
+from dev_groups.serializers import DevGroupSerializer
 from .models import Project, Comment, CardType, Lane, LoggedTime, Task, Card, Column, Board, WIPViolation
 from users.serializers import UserSerializer
 from django.contrib.auth import get_user_model
@@ -79,6 +81,15 @@ class ColumnSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
 	has_cards = serializers.ReadOnlyField()
 	# lane = LaneSerializer(read_only=True)
+	dev_group = DevGroupSerializer()
+
+	def to_internal_value(self, data):
+		self.fields['dev_group'] = serializers.PrimaryKeyRelatedField(write_only=True, required=True, queryset=DevGroup.objects.all())
+		return super().to_internal_value(data)
+
+	def to_representation(self, project):
+		self.fields['dev_group'] = DevGroupSerializer(read_only=True)
+		return super().to_representation(project)
 
 	class Meta:
 		model = Project
