@@ -60,6 +60,10 @@ class Project(BaseModel):
 	def has_cards(self):
 		return self.cards.exists()
 
+	@property
+	def has_silver_bullet(self):
+		return self.cards.filter(type__name='Silver bullet').exists()
+
 	def delete(self, *args, **kwargs):
 		if self.cards.exists():
 			self.is_active = False

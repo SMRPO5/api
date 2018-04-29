@@ -80,6 +80,7 @@ class ColumnSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
 	has_cards = serializers.ReadOnlyField()
+	has_silver_bullet = serializers.ReadOnlyField()
 	# lane = LaneSerializer(read_only=True)
 	dev_group = DevGroupSerializer()
 
