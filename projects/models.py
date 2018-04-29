@@ -93,7 +93,7 @@ class Column(BaseModel):
 	card_limit = models.PositiveIntegerField()
 
 	def __str__(self):
-		return self.name
+		return '%s - %s' % (self.name, self.order)
 
 
 class Task(BaseModel):

@@ -15,6 +15,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.permissions import DjangoModelPermissions
 from django_filters import rest_framework as filters
 from rest_framework import filters as rest_filters
+from django.db.models import When, Case, F
 from reversion.views import RevisionMixin
 import reversion
 
@@ -69,7 +70,7 @@ class BoardViewSet(ModelViewSet):
 	serializer_class = BoardSerializer
 
 	def get_queryset(self):
-		if self.request.user.is_kanban_master_allowed() or self.request.user.is_superuser:
+		if self.request.user.is_superuser:
 			return Board.objects.filter().prefetch_related(
 				Prefetch('columns', queryset=Column.objects.filter(parent__isnull=True).order_by('order').prefetch_related('subcolumns')),
 				Prefetch('projects', queryset=Project.objects.filter()),
