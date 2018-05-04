@@ -62,7 +62,8 @@ class Project(BaseModel):
 
 	@property
 	def has_silver_bullet(self):
-		return self.cards.filter(type__name='Silver bullet').exists()
+		last_requested_column = self.board.columns.filter(column_type=Column.REQUESTED).order_by('order').last()
+		return self.cards.filter(type__name='Silver bullet', column=last_requested_column).exists()
 
 	def delete(self, *args, **kwargs):
 		if self.cards.exists():
