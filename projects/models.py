@@ -131,7 +131,7 @@ class Card(BaseModel):
 	assignee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	order = models.PositiveIntegerField(null=True, blank=True)
 	priority = models.PositiveIntegerField(choices=priority_choices)
-	size = models.PositiveIntegerField()
+	size = models.PositiveIntegerField(null=True, blank=True)
 	deadline = models.DateTimeField()
 	end_date = models.DateTimeField(null=True, blank=True)
 	development_started = models.DateTimeField(null=True, blank=True)
