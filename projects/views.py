@@ -50,7 +50,9 @@ class CardTypeFilterBackend(rest_filters.BaseFilterBackend):
 		except Project.DoesNotExist:
 			return queryset.filter()
 
-		if dev_group.is_kanban_master(request.user):
+		if dev_group.is_kanban_master(request.user) and dev_group.is_product_owner(request.user):
+			return CardType.objects.all()
+		elif dev_group.is_kanban_master(request.user):
 			return CardType.objects.exclude(name='Feature request')
 		elif dev_group.is_product_owner(request.user):
 			return CardType.objects.exclude(name='Silver bullet')
