@@ -19,7 +19,7 @@ class MembershipSerializer(serializers.ModelSerializer):
 	role = RoleSerializer(many=True)
 
 	def to_internal_value(self, data):
-		self.fields['role'] = serializers.PrimaryKeyRelatedField(write_only=True, required=True, queryset=Group.objects.all())
+		self.fields['role'] = serializers.PrimaryKeyRelatedField(many=True, write_only=True, required=True, queryset=Group.objects.all())
 		return super().to_internal_value(data)
 
 	def to_representation(self, membership):
