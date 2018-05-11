@@ -45,7 +45,7 @@ class Board(BaseModel):
 	@property
 	def has_silver_bullet(self):
 		last_requested_column = self.columns.filter(column_type=Column.REQUESTED).order_by('order').last()
-		return Card.objects.filter(project__board=self, column=last_requested_column).exists()
+		return Card.objects.filter(project__board=self, column=last_requested_column, type__name='Silver bullet').exists()
 
 
 class Project(BaseModel):
