@@ -15,6 +15,8 @@ class RoleSerializer(serializers.ModelSerializer):
 
 class MembershipSerializer(serializers.ModelSerializer):
 	user = serializers.SlugRelatedField(slug_field='email', queryset=get_user_model().objects.all())
+	first_name = serializers.SlugRelatedField(slug_field='first_name', queryset=get_user_model().objects.all(), read_only=True)
+	last_name = serializers.SlugRelatedField(slug_field='last_name', queryset=get_user_model().objects.all(), read_only=True)
 	dev_group = serializers.PrimaryKeyRelatedField(read_only=True)
 	role = RoleSerializer(many=True)
 
