@@ -80,7 +80,6 @@ class ColumnSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
 	has_cards = serializers.ReadOnlyField()
-	has_silver_bullet = serializers.ReadOnlyField()
 	# lane = LaneSerializer(read_only=True)
 	dev_group = DevGroupSerializer()
 
@@ -111,6 +110,7 @@ class LaneSerializer(serializers.ModelSerializer):
 
 class BoardSerializer(serializers.ModelSerializer):
 	columns = ColumnSerializer(many=True, read_only=True)
+	has_silver_bullet = serializers.ReadOnlyField()
 	# lanes = LaneSerializer(source='project.lanes', many=True, read_only=True)
 	projects = ProjectSerializer(many=True, read_only=True)
 

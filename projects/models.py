@@ -42,6 +42,11 @@ class Board(BaseModel):
 	def __str__(self):
 		return self.name
 
+	@property
+	def has_silver_bullet(self):
+		last_requested_column = self.columns.filter(column_type=Column.REQUESTED).order_by('order').last()
+		return Card.objects.filter(project__board=self, column=last_requested_column).exists()
+
 
 class Project(BaseModel):
 	name = models.CharField(max_length=256)
@@ -60,11 +65,6 @@ class Project(BaseModel):
 	@property
 	def has_cards(self):
 		return self.cards.exists()
-
-	@property
-	def has_silver_bullet(self):
-		last_requested_column = self.board.columns.filter(column_type=Column.REQUESTED).order_by('order').last()
-		return self.cards.filter(type__name='Silver bullet', column=last_requested_column).exists()
 
 	def delete(self, *args, **kwargs):
 		if self.cards.exists():
