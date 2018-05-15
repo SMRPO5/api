@@ -36,7 +36,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class CardSerializer(serializers.ModelSerializer):
-	assignee = UserSerializer(fields=('id', 'email', 'first_name', 'last_name'))
+	assignee = UserSerializer(fields=('id', 'email', 'first_name', 'last_name'), read_only=True, required=False)
 	tasks = TaskSerializer(many=True, read_only=True)
 	is_in_requested = serializers.ReadOnlyField()
 	is_in_done = serializers.ReadOnlyField()
@@ -45,7 +45,7 @@ class CardSerializer(serializers.ModelSerializer):
 	is_in_acceptance = serializers.ReadOnlyField()
 
 	def to_internal_value(self, data):
-		self.fields['assignee'] = serializers.PrimaryKeyRelatedField(write_only=True, required=True, queryset=get_user_model().objects.all())
+		self.fields['assignee'] = serializers.PrimaryKeyRelatedField(write_only=True, required=False, allow_null=True, queryset=get_user_model().objects.all())
 		self.fields['type'] = serializers.PrimaryKeyRelatedField(write_only=True, required=True, queryset=CardType.objects.all())
 		return super().to_internal_value(data)
 
