@@ -129,7 +129,7 @@ class Card(BaseModel):
 	codename = models.CharField(max_length=512, null=True, blank=True)
 	name = models.CharField(max_length=512)
 	description = models.TextField()
-	assignee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+	assignee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 	order = models.PositiveIntegerField(null=True, blank=True)
 	priority = models.PositiveIntegerField(choices=priority_choices)
 	size = models.PositiveIntegerField(null=True, blank=True)
