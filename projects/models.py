@@ -97,6 +97,10 @@ class Column(BaseModel):
 	column_type = models.PositiveIntegerField(choices=column_type_choice)
 	order = models.PositiveIntegerField()
 	card_limit = models.PositiveIntegerField()
+	first_boundary_column = models.BooleanField(default=False)
+	second_boundary_column = models.BooleanField(default=False)
+	high_priority_column = models.BooleanField(default=False)
+	acceptance_ready_column = models.BooleanField(default=False)
 
 	def __str__(self):
 		return '%s - %s' % (self.name, self.order)
