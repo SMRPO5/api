@@ -103,6 +103,10 @@ class ColumnViewSet(ModelViewSet):
 		return Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns__cards__tasks', 'cards__tasks')
 
 
+class BoardUpdateViewSet(ModelViewSet):
+	serializer_class = BoardUpdateSerializer
+
+
 class LoggedTimeViewSet(ModelViewSet):
 	serializer_class = LoggedTimeSerializer
 

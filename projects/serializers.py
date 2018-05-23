@@ -74,11 +74,41 @@ class ChildColumnSerializer(serializers.ModelSerializer):
 
 
 class ColumnSerializer(serializers.ModelSerializer):
-	subcolumns = ChildColumnSerializer(many=True, read_only=True)
+	subcolumns = ChildColumnSerializer(many=True)
 
 	class Meta:
 		model = Column
 		fields = '__all__'
+		extra_kwargs = {
+			'first_boundary_column': {
+				'required': True
+			},
+			'second_boundary_column': {
+				'required': True
+			},
+			'high_priority_column': {
+				'required': True
+			},
+			'acceptance_ready_column': {
+				'required': True
+			}
+		}
+
+
+class BoardUpdateSerializer(serializers.Serializer):
+	board = serializers.PrimaryKeyRelatedField(queryset=Board.objects.all())
+	board_name = serializers.CharField()
+	columns = ColumnSerializer(many=True)
+
+	def update(self, instance, validated_data):
+		pass
+
+	def create(self, validated_data):
+		board = validated_data.pop('board')
+		name = validated_data.pop('board_name')
+		columns = validated_data.pop('columns')
+		board.name = name
+		board.save()
 
 
 class ProjectSerializer(serializers.ModelSerializer):

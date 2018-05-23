@@ -94,7 +94,7 @@ class Column(BaseModel):
 	name = models.CharField(max_length=256)
 	parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='subcolumns')
 	board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='columns')
-	column_type = models.PositiveIntegerField(choices=column_type_choice)
+	column_type = models.PositiveIntegerField(choices=column_type_choice, null=True, blank=True)
 	order = models.PositiveIntegerField()
 	card_limit = models.PositiveIntegerField()
 	first_boundary_column = models.BooleanField(default=False)
