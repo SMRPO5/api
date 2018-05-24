@@ -105,20 +105,31 @@ class BoardUpdateSerializer(serializers.Serializer):
 
 	def create(self, validated_data):
 		board = validated_data.pop('board')
-		name = validated_data.pop('board_name')
-		columns = validated_data.pop('columns')
+		name = self.initial_data.pop('board_name')
+		columns = self.initial_data.pop('columns')
 		board.name = name
 		board.save()
+		order = 0
+		suborder = 0
+		column_type = Column.REQUESTED
 		for col in columns:
 			column = Column.objects.get(id=col['id'])
-			column.order = col['order']
-			for subcol in columns['subcolumns']:
+			if column.first_boundary_column:
+				column_type = Column.IN_PROGRESS
+			if column.second_boundary_column:
+				column_type = Column.DONE
+			column.column_type = column_type
+			column.order = order
+			column.subcolumns.clear()
+			for subcol in col['subcolumns']:
 				subcolumn = Column.objects.get(id=subcol['id'])
 				subcolumn.parent = column
-				subcolumn.order = subcol['order']
+				subcolumn.order = suborder
 				subcolumn.save()
+				suborder += 1
 			column.save()
-		return {'board': board.id, 'name': board.name, 'columns': []}
+			order += 1
+		return {'board': board, 'board_name': board.name, 'columns': []}
 
 
 class ProjectSerializer(serializers.ModelSerializer):
