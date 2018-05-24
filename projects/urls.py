@@ -20,4 +20,5 @@ router.register(r'board_update', BoardUpdateViewSet, base_name='board_update')
 urlpatterns = [
 	url(r'^', include(router.urls)),
 # 	url(r'^card_history/(?P<card_id>\d+)/$', CardHistoryViewSet.as_view({'get': 'list'}))
+	url(r'^board_copy/(?P<board_id>\d+)/$', CopyBoardView.as_view({'post': 'create'}))
 	]

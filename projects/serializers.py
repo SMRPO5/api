@@ -65,8 +65,8 @@ class CardSerializer(serializers.ModelSerializer):
 
 
 class ChildColumnSerializer(serializers.ModelSerializer):
-
 	subcolumns = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+	has_cards = serializers.ReadOnlyField(source='has_cards')
 
 	class Meta:
 		model = Column
@@ -75,6 +75,7 @@ class ChildColumnSerializer(serializers.ModelSerializer):
 
 class ColumnSerializer(serializers.ModelSerializer):
 	subcolumns = ChildColumnSerializer(many=True, required=False)
+	has_cards = serializers.ReadOnlyField(source='has_cards')
 
 	class Meta:
 		model = Column

@@ -1,9 +1,10 @@
 from django.contrib.auth import get_user_model
 from itertools import islice
 
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, \
 	DestroyModelMixin
+from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from reversion.models import Version
 
@@ -14,7 +15,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.permissions import DjangoModelPermissions
 from django_filters import rest_framework as filters
-from rest_framework import filters as rest_filters
+from rest_framework import filters as rest_filters, status
 from django.db.models import When, Case, F
 from reversion.views import RevisionMixin
 import reversion
@@ -78,10 +79,13 @@ class BoardViewSet(ModelViewSet):
 				Prefetch('projects', queryset=Project.objects.filter()),
 				'projects__cards').distinct()
 
-		return Board.objects.filter(projects__dev_group__members__in=[self.request.user]).prefetch_related(
+		return Board.objects.filter(Q(projects__dev_group__members__in=[self.request.user]) | Q(owner=self.request.user)).prefetch_related(
 			Prefetch('columns', queryset=Column.objects.filter(parent__isnull=True).order_by('order').prefetch_related(Prefetch('subcolumns', queryset=Column.objects.filter().order_by('order')))),
 			Prefetch('projects', queryset=Project.objects.filter(dev_group__members__in=[self.request.user])),
 			'projects__cards').distinct()
+
+	def perform_create(self, serializer):
+		serializer.save(owner=self.request.user)
 
 
 class LaneViewSet(ModelViewSet):
@@ -101,6 +105,21 @@ class ColumnViewSet(ModelViewSet):
 
 	def get_queryset(self):
 		return Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns__cards__tasks', 'cards__tasks')
+
+
+class CopyBoardView(GenericViewSet):
+
+	def create(self, *args, **kwargs):
+		board = Board.objects.get(id=kwargs['board_id'])
+		copy_board = Board.objects.create(name=board.name + ' copy', dAttr=board.dAttr, order=board.order + 1, owner=self.request.user)
+		for column in board.columns.all():
+			column.id = None
+			column.save()
+			column.board = copy_board
+			column.save()
+		copy_board.save()
+		serialized = BoardSerializer(copy_board).data
+		return Response(serialized, status=status.HTTP_200_OK)
 
 
 class BoardUpdateViewSet(ModelViewSet):

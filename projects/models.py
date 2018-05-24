@@ -34,6 +34,7 @@ class CardType(BaseModel):
 
 
 class Board(BaseModel):
+	owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	name = models.CharField(max_length=256)
 	order = models.PositiveIntegerField(default=1)
 	dAttr = models.IntegerField()
@@ -101,6 +102,10 @@ class Column(BaseModel):
 	second_boundary_column = models.BooleanField(default=False)
 	high_priority_column = models.BooleanField(default=False)
 	acceptance_ready_column = models.BooleanField(default=False)
+
+	@property
+	def has_cards(self):
+		return self.cards.exists()
 
 	def __str__(self):
 		return '%s - %s' % (self.name, self.order)
