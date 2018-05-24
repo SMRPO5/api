@@ -74,7 +74,7 @@ class ChildColumnSerializer(serializers.ModelSerializer):
 
 
 class ColumnSerializer(serializers.ModelSerializer):
-	subcolumns = ChildColumnSerializer(many=True)
+	subcolumns = ChildColumnSerializer(many=True, required=False)
 
 	class Meta:
 		model = Column
@@ -109,6 +109,16 @@ class BoardUpdateSerializer(serializers.Serializer):
 		columns = validated_data.pop('columns')
 		board.name = name
 		board.save()
+		for col in columns:
+			column = Column.objects.get(id=col['id'])
+			column.order = col['order']
+			for subcol in columns['subcolumns']:
+				subcolumn = Column.objects.get(id=subcol['id'])
+				subcolumn.parent = column
+				subcolumn.order = subcol['order']
+				subcolumn.save()
+			column.save()
+		return {'board': board.id, 'name': board.name, 'columns': []}
 
 
 class ProjectSerializer(serializers.ModelSerializer):
