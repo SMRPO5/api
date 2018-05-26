@@ -124,9 +124,15 @@ class BoardUpdateSerializer(serializers.Serializer):
 			column.subcolumns.clear()
 			for subcol in col['subcolumns']:
 				subcolumn = Column.objects.get(id=subcol['id'])
+				if subcolumn.first_boundary_column:
+					column_type = Column.IN_PROGRESS
+				if subcolumn.second_boundary_column:
+					column_type = Column.DONE
 				subcolumn.parent = column
+				subcolumn.column_type = column_type
 				subcolumn.order = suborder
 				subcolumn.save()
+				column.column_type = None
 				suborder += 1
 			column.save()
 			order += 1
