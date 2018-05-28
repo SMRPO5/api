@@ -112,10 +112,16 @@ class CopyBoardView(GenericViewSet):
 	def create(self, *args, **kwargs):
 		board = Board.objects.get(id=kwargs['board_id'])
 		copy_board = Board.objects.create(name=board.name + ' copy', dAttr=board.dAttr, order=board.order + 1, owner=self.request.user)
-		for column in board.columns.all():
+		for column in board.columns.filter(parent__isnull=True):
+			subcolumns = list(column.subcolumns.all())
 			column.id = None
 			column.save()
 			column.board = copy_board
+			for subcolumn in subcolumns:
+				subcolumn.id = None
+				subcolumn.save()
+				subcolumn.parent = column
+				subcolumn.save()
 			column.save()
 		copy_board.save()
 		serialized = BoardSerializer(copy_board).data
