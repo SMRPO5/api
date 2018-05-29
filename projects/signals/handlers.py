@@ -4,7 +4,7 @@ from fieldsignals import pre_save_changed
 import reversion
 from django.utils import timezone
 
-from projects.models import Card, Column, Project, Lane
+from projects.models import Card, Column, Project, Lane, CardType
 
 
 @receiver(post_save, sender=Card)
@@ -24,7 +24,12 @@ def log_history_on_column_change(sender, instance, changed_fields=None, **kwargs
 	if instance.id:  # Only execute if card actually exists and is not being created
 		for field, (old, new) in changed_fields.items():
 			if field.name == 'column':
-				reversion.set_comment('Card moved from %s to %s' % (Column.objects.get(id=old).name, instance.column.name))
+				old_column = Column.objects.get(id=old)
+				reversion.set_comment('Card moved from %s to %s' % (old_column.name, instance.column.name))
+
+				if old_column.column_type == Column.DONE and instance.column.column_type == Column.REQUESTED:
+					card_type, created = CardType.objects.get_or_create(name='Rejected', color='#a80fa8')
+					instance.type = card_type
 
 
 @receiver(post_save, sender=Project)

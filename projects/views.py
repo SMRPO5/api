@@ -54,13 +54,13 @@ class CardTypeFilterBackend(rest_filters.BaseFilterBackend):
 			return queryset.filter()
 
 		if dev_group.is_kanban_master(request.user) and dev_group.is_product_owner(request.user):
-			return CardType.objects.all()
+			return CardType.objects.exclude(name='Rejected')
 		elif dev_group.is_kanban_master(request.user):
-			return CardType.objects.exclude(name='Feature request')
+			return CardType.objects.exclude(Q(name='Feature request') | Q(name='Rejected'))
 		elif dev_group.is_product_owner(request.user):
-			return CardType.objects.exclude(name='Silver bullet')
+			return CardType.objects.exclude(Q(name='Silver bullet') | Q(name='Rejected'))
 
-		return CardType.objects.exclude(name__in=['Feature request', 'Silver bullet'])
+		return CardType.objects.exclude(name__in=['Feature request', 'Silver bullet', 'Rejected'])
 
 
 class CardTypeViewSet(ModelViewSet):
