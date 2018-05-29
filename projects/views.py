@@ -31,6 +31,8 @@ class ProjectViewSet(ModelViewSet):
 	}
 
 	def get_queryset(self):
+		if 'unassigned' in self.request.query_params and self.request.query_params['unassigned']:
+			return Project.objects.filter(is_active=True, board__isnull=True).prefetch_related('cards')
 		return Project.objects.filter(is_active=True).prefetch_related('cards')
 
 
