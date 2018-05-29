@@ -104,7 +104,10 @@ class ColumnViewSet(ModelViewSet):
 	serializer_class = ColumnSerializer
 
 	def get_queryset(self):
-		return Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns__cards__tasks', 'cards__tasks')
+		if 'parent_only' in self.request.query_params and self.request.query_params['parent_only']:
+			return Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns__cards__tasks', 'cards__tasks')
+		else:
+			return Column.objects.filter().prefetch_related('subcolumns__cards__tasks', 'cards__tasks')
 
 
 class CopyBoardView(GenericViewSet):
