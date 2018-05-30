@@ -126,6 +126,7 @@ class CopyBoardView(GenericViewSet):
 				subcolumn.id = None
 				subcolumn.save()
 				subcolumn.parent = column
+				subcolumn.board = copy_board
 				subcolumn.save()
 			column.save()
 		copy_board.save()
