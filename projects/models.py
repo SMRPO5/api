@@ -109,12 +109,12 @@ class Column(BaseModel):
 
 	@property
 	def card_count(self):
-		if self.parent is None:
-			return self.cards.count()
-		count = 0
-		for column in self.subcolumns.all():
-			count += column.cards.count()
-		return count
+		if self.subcolumns.count() > 0:
+			count = 0
+			for column in self.subcolumns.all():
+				count += column.cards.count()
+			return count
+		return self.cards.count()
 
 	def __str__(self):
 		return '%s - %s' % (self.name, self.order)
