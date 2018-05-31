@@ -46,6 +46,8 @@ class Board(BaseModel):
 	@property
 	def has_silver_bullet(self):
 		last_requested_column = self.columns.filter(column_type=Column.REQUESTED).order_by('order').last()
+		if Column.objects.filter(high_priority_column=True).exists():
+			last_requested_column = Column.objects.filter(high_priority_column=True)[0]
 		return Card.objects.filter(project__board=self, column=last_requested_column, type__name='Silver bullet').exists()
 
 
@@ -190,6 +192,8 @@ class Card(BaseModel):
 			if self.type.name == 'Silver bullet':
 				last_column_in_requested = Column.objects.filter(board__projects__in=[self.project], column_type=Column.REQUESTED).order_by('order').last()
 				self.column = last_column_in_requested
+				if Column.objects.filter(high_priority_column=True).exists():
+					self.column = Column.objects.filter(high_priority_column=True)[0]
 			else:
 				first_column = Column.objects.filter(board__projects__in=[self.project], column_type=Column.REQUESTED).order_by('order').first()
 				self.column = first_column
