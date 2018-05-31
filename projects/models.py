@@ -192,8 +192,8 @@ class Card(BaseModel):
 			if self.type.name == 'Silver bullet':
 				last_column_in_requested = Column.objects.filter(board__projects__in=[self.project], column_type=Column.REQUESTED).order_by('order').last()
 				self.column = last_column_in_requested
-				if Column.objects.filter(high_priority_column=True).exists():
-					self.column = Column.objects.filter(high_priority_column=True)[0]
+				if Column.objects.filter(board__projects__in=[self.project], high_priority_column=True).exists():
+					self.column = Column.objects.filter(board__projects__in=[self.project], high_priority_column=True)[0]
 			else:
 				first_column = Column.objects.filter(board__projects__in=[self.project], column_type=Column.REQUESTED).order_by('order').first()
 				self.column = first_column
