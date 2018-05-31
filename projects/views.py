@@ -78,12 +78,12 @@ class BoardViewSet(ModelViewSet):
 		if self.request.user.is_superuser:
 			return Board.objects.filter().prefetch_related(
 				Prefetch('columns', queryset=Column.objects.filter(parent__isnull=True).order_by('order').prefetch_related(Prefetch('subcolumns', queryset=Column.objects.filter().order_by('order')))),
-				Prefetch('projects', queryset=Project.objects.filter()),
+				Prefetch('projects', queryset=Project.objects.filter(is_active=True)),
 				'projects__cards').distinct()
 
 		return Board.objects.filter(Q(projects__dev_group__members__in=[self.request.user]) | Q(owner=self.request.user)).prefetch_related(
 			Prefetch('columns', queryset=Column.objects.filter(parent__isnull=True).order_by('order').prefetch_related(Prefetch('subcolumns', queryset=Column.objects.filter().order_by('order')))),
-			Prefetch('projects', queryset=Project.objects.filter(dev_group__members__in=[self.request.user])),
+			Prefetch('projects', queryset=Project.objects.filter(dev_group__members__in=[self.request.user], is_active=True)),
 			'projects__cards').distinct()
 
 	def perform_create(self, serializer):

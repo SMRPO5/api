@@ -38,6 +38,8 @@ def log_history_on_column_change(sender, instance, changed_fields=None, **kwargs
 	if instance.id:  # Only execute if card actually exists and is not being created
 		for field, (old, new) in changed_fields.items():
 			if field.name == 'board':
+				if old is None or instance.board is None:
+					continue
 				old_board = Board.objects.get(id=old)
 
 				if old_board.id != instance.board.id:
