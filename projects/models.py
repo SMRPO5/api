@@ -107,6 +107,15 @@ class Column(BaseModel):
 	def has_cards(self):
 		return self.cards.exists()
 
+	@property
+	def card_count(self):
+		if self.parent is None:
+			return self.cards.count()
+		count = 0
+		for column in self.subcolumns.all():
+			count += column.cards.count()
+		return count
+
 	def __str__(self):
 		return '%s - %s' % (self.name, self.order)
 
