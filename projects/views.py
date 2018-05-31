@@ -155,6 +155,10 @@ class TaskViewSet(ModelViewSet):
 class CardViewSet(RevisionMixin, ModelViewSet):
 	serializer_class = CardSerializer
 
+	filter_fields = {
+		'column': ['exact', 'in']
+	}
+
 	def get_queryset(self):
 		return Card.objects.all()
 
