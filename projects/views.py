@@ -60,6 +60,8 @@ class CardTypeFilterBackend(rest_filters.BaseFilterBackend):
 			return CardType.objects.exclude(Q(name='Feature request') | Q(name='Rejected'))
 		elif dev_group.is_product_owner(request.user):
 			return CardType.objects.exclude(Q(name='Silver bullet') | Q(name='Rejected'))
+		elif 'all' in request.query_params and request.query_params['all']:
+			return CardType.objects.all()
 
 		return CardType.objects.exclude(name__in=['Feature request', 'Silver bullet', 'Rejected'])
 
@@ -106,11 +108,15 @@ class LaneViewSet(ModelViewSet):
 class ColumnViewSet(ModelViewSet):
 	serializer_class = ColumnSerializer
 
+	filter_fields = {
+		'board__projects': ['exact', 'in']
+	}
+
 	def get_queryset(self):
 		if 'parent_only' in self.request.query_params and self.request.query_params['parent_only']:
-			return Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns__cards__tasks', 'cards__tasks')
+			return Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns__cards__tasks', 'cards__tasks').distinct()
 		else:
-			return Column.objects.filter().prefetch_related('subcolumns__cards__tasks', 'cards__tasks')
+			return Column.objects.filter().prefetch_related('subcolumns__cards__tasks', 'cards__tasks').distinct()
 
 
 class CopyBoardView(GenericViewSet):
@@ -169,7 +175,13 @@ class CardViewSet(RevisionMixin, ModelViewSet):
 
 class WIPViolationViewSet(ModelViewSet):
 	serializer_class = WIPViolationSerializer
-	filter_fields = ('card', )
+	filter_fields = {
+		'card': ['exact', 'in'],
+		'card__created_at': ['lt', 'gt', 'exact'],
+		'card__size': ['lt', 'gt', 'exact'],
+		'card__type': ['exact', 'in'],
+		'card__project': ['exact', 'in']
+	}
 
 	def get_queryset(self):
 		return WIPViolation.objects.all()
