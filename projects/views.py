@@ -107,11 +107,15 @@ class LaneViewSet(ModelViewSet):
 class ColumnViewSet(ModelViewSet):
 	serializer_class = ColumnSerializer
 
+	filter_fields = {
+		'board__projects': ['exact', 'in']
+	}
+
 	def get_queryset(self):
 		if 'parent_only' in self.request.query_params and self.request.query_params['parent_only']:
-			return Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns__cards__tasks', 'cards__tasks')
+			return Column.objects.filter(parent__isnull=True).prefetch_related('subcolumns__cards__tasks', 'cards__tasks').distinct()
 		else:
-			return Column.objects.filter().prefetch_related('subcolumns__cards__tasks', 'cards__tasks')
+			return Column.objects.filter().prefetch_related('subcolumns__cards__tasks', 'cards__tasks').distinct()
 
 
 class CopyBoardView(GenericViewSet):
