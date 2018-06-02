@@ -168,7 +168,13 @@ class CardViewSet(RevisionMixin, ModelViewSet):
 
 class WIPViolationViewSet(ModelViewSet):
 	serializer_class = WIPViolationSerializer
-	filter_fields = ('card', )
+	filter_fields = {
+		'card': ['exact', 'in'],
+		'card__created_at': ['lt', 'gt', 'exact'],
+		'card__size': ['lt', 'gt', 'exact'],
+		'card__type': ['exact', 'in'],
+		'card__project': ['exact', 'in']
+	}
 
 	def get_queryset(self):
 		return WIPViolation.objects.all()
@@ -191,3 +197,4 @@ class CardHistoryViewSet(ListModelMixin, GenericViewSet):
 
 	def get_queryset(self):
 		return Version.objects.get_for_model(Card)
+

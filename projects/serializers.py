@@ -190,6 +190,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
 class WIPViolationSerializer(serializers.ModelSerializer):
 	violation_by = UserSerializer(fields=('id', 'email', 'first_name', 'last_name'), read_only=True)
+	card = CardSerializer()
 
 	class Meta:
 		model = WIPViolation
