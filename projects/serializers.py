@@ -266,13 +266,13 @@ class AnalyticsLeadTimeSerializer(serializers.ModelSerializer):
 		lane = Lane.objects.get(project=project)
 		start_column_obj = Column.objects.get(id=start_column)
 		end_column_obj = Column.objects.get(id=end_column)
-		possibleColumns = Column.objects.filter(board=lane.project.board.id, order__range=(start_column_obj.order, end_column_obj.order)).order_by('order')
+		possible_columns = Column.objects.filter(board=lane.project.board.id, order__range=(start_column_obj.order, end_column_obj.order)).order_by('order')
 		card = json.loads(instance.serialized_data)[0]['fields']
 		revision = instance.revision
 
 		is_requested_project = card['project'] == project
 		is_card_move = 'Card moved from' in revision.comment
-		is_card_in_possible_column = any(column.id == card['column'] for column in possibleColumns)
+		is_card_in_possible_column = any(column.id == card['column'] for column in possible_columns)
 		is_in_creation_date_interval = True if creation_date_interval is None else dateutil.parser.parse(creation_date_interval[0]) <= dateutil.parser.parse(card['created_at']) <= dateutil.parser.parse(creation_date_interval[1])
 		is_in_finished_date_interval = True if finished_date_interval is None or card['end_date'] is None else dateutil.parser.parse(finished_date_interval[0]) <= dateutil.parser.parse(card['end_date']) <= dateutil.parser.parse(finished_date_interval[1])
 		is_in_development_date_interval = True if development_date_interval is None or card['development_started'] is None else dateutil.parser.parse(development_date_interval[0]) <= dateutil.parser.parse(card['development_started']) <= dateutil.parser.parse(development_date_interval[1])
