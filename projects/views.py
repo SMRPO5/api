@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from itertools import islice
 
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Prefetch, Q
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, \
 	DestroyModelMixin
@@ -191,3 +192,36 @@ class CardHistoryViewSet(ListModelMixin, GenericViewSet):
 
 	def get_queryset(self):
 		return Version.objects.get_for_model(Card)
+
+
+class AnalyticsLeadTimeViewSet(CreateModelMixin, GenericViewSet):
+	serializer_class = AnalyticsLeadTimeSerializer
+
+	def get_queryset(self):
+		return Version.objects.get_for_model(Card)
+
+	def create(self, request, *args, **kwargs):
+		queryset = self.get_queryset()
+		serializer = self.get_serializer(queryset, many=True)
+		filtered_data = [card for card in serializer.data if card is not None]
+		filtered_data.sort(key=lambda x: x['date_created'])
+
+		start_column_obj = Column.objects.get(id=request.data.get('start_column'))
+		end_column_obj = Column.objects.get(id=request.data.get('end_column'))
+		card_ids = list(set([card['id'] for card in filtered_data]))
+		return_data = []
+		for card_id in card_ids:
+			start_date = next((card for card in filtered_data[::-1] if card['id'] == card_id and card['column'] == start_column_obj.id), None)
+			end_date = next((card for card in filtered_data if card['id'] == card_id and card['column'] == end_column_obj.id), None)
+
+			return_data.append({
+				'id': card_id,
+				'start_date': start_date['date_created'],
+				'end_date': end_date['date_created']
+			})
+
+		return Response(return_data)
+
+	def perform_create(self, serializer):
+		pass
+

@@ -15,6 +15,7 @@ router.register(r'columns', ColumnViewSet, base_name='cards')
 router.register(r'wip_violations', WIPViolationViewSet, base_name='wip_violations')
 router.register(r'card_history', CardHistoryViewSet, base_name='card_history')
 router.register(r'board_update', BoardUpdateViewSet, base_name='board_update')
+router.register(r'analytics_lead_time', AnalyticsLeadTimeViewSet, base_name='analytics_lead_time')
 
 
 urlpatterns = [
