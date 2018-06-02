@@ -59,6 +59,8 @@ class CardTypeFilterBackend(rest_filters.BaseFilterBackend):
 			return CardType.objects.exclude(Q(name='Feature request') | Q(name='Rejected'))
 		elif dev_group.is_product_owner(request.user):
 			return CardType.objects.exclude(Q(name='Silver bullet') | Q(name='Rejected'))
+		elif 'all' in request.query_params and request.query_params['all']:
+			return CardType.objects.all()
 
 		return CardType.objects.exclude(name__in=['Feature request', 'Silver bullet', 'Rejected'])
 
