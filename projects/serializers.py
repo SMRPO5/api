@@ -270,6 +270,8 @@ class AnalyticsLeadTimeSerializer(serializers.ModelSerializer):
 		card = json.loads(instance.serialized_data)[0]['fields']
 		revision = instance.revision
 
+		print('Card: ', card)
+
 		is_requested_project = card['project'] == project
 		is_card_move = 'Card moved from' in revision.comment
 		is_card_in_possible_column = any(column.id == card['column'] for column in possible_columns)
