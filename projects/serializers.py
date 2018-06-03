@@ -290,7 +290,7 @@ class AnalyticsLeadTimeSerializer(serializers.ModelSerializer):
 		}
 
 		print('New instance: ', new_instance)
-		print('Rev: ', revision)
+		print('Rev: ', revision.id, revision.comment, revision.date_created)
 
 		return new_instance
 
