@@ -226,7 +226,7 @@ class AnalyticsLeadTimeViewSet(CreateModelMixin, GenericViewSet):
 			start_date = next((card for card in filtered_data[::-1] if card['id'] == card_id and card['column'] == start_column_obj.id), None)
 			end_date = next((card for card in filtered_data if card['id'] == card_id and card['column'] == end_column_obj.id), None)
 
-			if start_date is None or end_date is None:
+			if start_date is None:
 				continue
 
 			return_data.append({
