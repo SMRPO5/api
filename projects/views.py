@@ -228,8 +228,8 @@ class AnalyticsLeadTimeViewSet(CreateModelMixin, GenericViewSet):
 
 			return_data.append({
 				'id': card_id,
-				'start_date': start_date['date_created'],
-				'end_date': end_date['date_created']
+				'start_date': None if start_date is None else start_date['date_created'],
+				'end_date': None if end_date is None else end_date['date_created']
 			})
 
 		return Response(return_data)
