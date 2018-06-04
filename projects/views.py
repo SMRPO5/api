@@ -178,6 +178,8 @@ class WIPViolationViewSet(ModelViewSet):
 	filter_fields = {
 		'card': ['exact', 'in'],
 		'card__created_at': ['lt', 'gt', 'exact'],
+		'card__development_started': ['lt', 'gt', 'exact'],
+		'card__end_date': ['lt', 'gt', 'exact'],
 		'card__size': ['lt', 'gt', 'exact'],
 		'card__type': ['exact', 'in'],
 		'card__project': ['exact', 'in']
