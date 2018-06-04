@@ -274,10 +274,37 @@ class AnalyticsLeadTimeSerializer(serializers.ModelSerializer):
 		lane = Lane.objects.get(project=project)
 		start_column_obj = Column.objects.get(id=start_column)
 		end_column_obj = Column.objects.get(id=end_column)
-		possible_columns = Column.objects.filter(board=lane.project.board.id, order__range=(start_column_obj.order, end_column_obj.order)).order_by('order')
+		start_column_order = start_column_obj.order
+		if start_column_obj.parent is not None:
+			start_column_order = start_column_obj.parent.order
+		end_column_order = end_column_obj.order
+		if end_column_obj.parent is not None:
+			end_column_order = end_column_obj.parent.order
+
+		#possible_columns = Column.objects.filter(board=lane.project.board.id, order__range=(start_column_obj.order, end_column_obj.order)).order_by('order')
+		parent_columns = Column.objects.filter(board=lane.project.board.id, order__range=(start_column_order, end_column_order), parent__isnull=True).order_by('order')
+		possible_columns = []
+		for parent_column in parent_columns:
+			has_subcolumns = parent_column.subcolumns.count() > 0
+
+			if has_subcolumns:
+				child_columns = Column.objects.filter(board=lane.project.board.id, parent__exact=parent_column.id).order_by('order')
+				filtered_child_columns = child_columns
+				if start_column_obj.parent is not None and start_column_obj.parent.id == parent_column.id:
+					filtered_child_columns = [column for column in child_columns if column.order >= start_column_obj.order]
+				elif end_column_obj.parent is not None and end_column_obj.parent.id == parent_column.id:
+					filtered_child_columns = [column for column in child_columns if column.order <= end_column_obj.order]
+
+				possible_columns.append(parent_column)
+				possible_columns = possible_columns + filtered_child_columns
+			else:
+				possible_columns.append(parent_column)
+
 		card = json.loads(instance.serialized_data)[0]['fields']
 		revision = instance.revision
 
+		print('Parent columns: ', parent_columns)
+		print('Possible columns: ', possible_columns)
 		print('Card: ', card)
 		print('Rev: ', revision.id, revision.comment, revision.date_created)
 
