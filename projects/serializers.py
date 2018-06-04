@@ -278,6 +278,10 @@ class AnalyticsLeadTimeSerializer(serializers.ModelSerializer):
 		card = json.loads(instance.serialized_data)[0]['fields']
 		revision = instance.revision
 
+		print('Card: ', card)
+		print('New instance: ', new_instance)
+		print('Rev: ', revision.id, revision.comment, revision.date_created)
+
 		is_requested_project = card['project'] == project
 		is_card_move = 'Card moved from' in revision.comment
 		is_card_in_possible_column = any(column.id == card['column'] for column in possible_columns)
@@ -296,9 +300,6 @@ class AnalyticsLeadTimeSerializer(serializers.ModelSerializer):
 			'date_created': revision.date_created,
 			'column': card['column']
 		}
-
-		print('New instance: ', new_instance)
-		print('Rev: ', revision.id, revision.comment, revision.date_created)
 
 		return new_instance
 
