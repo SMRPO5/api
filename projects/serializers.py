@@ -191,7 +191,15 @@ class BoardSerializer(serializers.ModelSerializer):
 
 class WIPViolationSerializer(serializers.ModelSerializer):
 	violation_by = UserSerializer(fields=('id', 'email', 'first_name', 'last_name'), read_only=True)
-	card = CardSerializer()
+	card = CardSerializer(read_only=True)
+
+	def to_internal_value(self, data):
+		self.fields['card'] = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Card.objects.all())
+		return super().to_internal_value(data)
+
+	def to_representation(self, project):
+		self.fields['card'] = CardSerializer(read_only=True)
+		return super().to_representation(project)
 
 	class Meta:
 		model = WIPViolation
