@@ -289,7 +289,7 @@ class AnalyticsLeadTimeSerializer(serializers.ModelSerializer):
 
 			if has_subcolumns:
 				child_columns = Column.objects.filter(board=lane.project.board.id, parent__exact=parent_column.id).order_by('order')
-				filtered_child_columns = child_columns
+				filtered_child_columns = [column for column in child_columns]
 				if start_column_obj.parent is not None and start_column_obj.parent.id == parent_column.id:
 					filtered_child_columns = [column for column in child_columns if column.order >= start_column_obj.order]
 				elif end_column_obj.parent is not None and end_column_obj.parent.id == parent_column.id:
