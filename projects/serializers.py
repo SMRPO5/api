@@ -279,7 +279,6 @@ class AnalyticsLeadTimeSerializer(serializers.ModelSerializer):
 		revision = instance.revision
 
 		print('Card: ', card)
-		print('New instance: ', new_instance)
 		print('Rev: ', revision.id, revision.comment, revision.date_created)
 
 		is_requested_project = card['project'] == project
@@ -300,6 +299,8 @@ class AnalyticsLeadTimeSerializer(serializers.ModelSerializer):
 			'date_created': revision.date_created,
 			'column': card['column']
 		}
+
+		print('New instance: ', new_instance)
 
 		return new_instance
 
