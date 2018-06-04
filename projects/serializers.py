@@ -309,7 +309,7 @@ class AnalyticsLeadTimeSerializer(serializers.ModelSerializer):
 		print('Rev: ', revision.id, revision.comment, revision.date_created)
 
 		is_requested_project = card['project'] == project
-		is_card_move = 'Card moved from' in revision.comment
+		is_card_move = 'Card moved from' in revision.comment or 'Card created' in revision.comment
 		is_card_in_possible_column = any(column.id == card['column'] for column in possible_columns)
 		is_in_creation_date_interval = True if creation_date_interval is None else dateutil.parser.parse(creation_date_interval[0]) <= dateutil.parser.parse(card['created_at']) <= dateutil.parser.parse(creation_date_interval[1])
 		is_in_finished_date_interval = True if finished_date_interval is None or card['end_date'] is None else dateutil.parser.parse(finished_date_interval[0]) <= dateutil.parser.parse(card['end_date']) <= dateutil.parser.parse(finished_date_interval[1])
@@ -317,6 +317,8 @@ class AnalyticsLeadTimeSerializer(serializers.ModelSerializer):
 		is_correct_type = True if type is None else card['type'] == type
 		is_in_size_interval = True if size_interval is None or card['size'] is None else size_interval[0] <= card['size'] <= size_interval[1]
 
+		print(is_requested_project, is_card_move, is_card_in_possible_column, is_in_creation_date_interval,
+				is_in_finished_date_interval, is_in_development_date_interval, is_correct_type, is_in_size_interval)
 		if not (is_requested_project and is_card_move and is_card_in_possible_column and is_in_creation_date_interval and
 					is_in_finished_date_interval and is_in_development_date_interval and is_correct_type and is_in_size_interval):
 			return None
